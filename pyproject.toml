@@ -1,0 +1,13 @@
+[project]
+name = "epamawsserverlesscourse"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "aws-syndicate>=1.21.2",
+]
+
+[dependency-groups]
+dev = [
+    "black>=21.12b0",
+    "pytest>=9.1.1",
+]
