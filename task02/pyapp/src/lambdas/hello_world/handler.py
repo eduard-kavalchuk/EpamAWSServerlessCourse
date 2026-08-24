@@ -18,7 +18,7 @@ class HelloWorld(AbstractLambda):
         # Extract path and method from the event
         # For Function URLs, the raw path is in event['rawPath']
         path = event.get('rawPath', '/')
-        method = event.get('requestContext', {}).get('http', {}).get('method', 'GET')
+        method = event.get('requestContext', {}).get("http", {}).get('method', 'GET')
 
         if path == '/hello' and method == 'GET':
             return {'statusCode': 200, 'message': 'Hello from Lambda'}
