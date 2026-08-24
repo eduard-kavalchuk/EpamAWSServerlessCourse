@@ -14,7 +14,7 @@
   "publish_version": true,
   "alias": "${lambdas_alias_name}",
   "url_config": {
-    "auth_type": "NONE"
+    "auth_type": "AWS_IAM"
   },
   "ephemeral_storage": 512,
   "logs_expiration": "${logs_expiration}",
