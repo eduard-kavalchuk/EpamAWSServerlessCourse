@@ -23,7 +23,7 @@ class TestSuccess(HelloWorldLambdaTestCase):
             'message': 'Hello from Lambda'
         }
 
-        self.assertEqual(response, json.dumps(expected_response))
+        self.assertEqual(response, expected_response)
 
     def test_fail_wrong_resource(self):
         path = '/helloworld'
@@ -46,7 +46,7 @@ class TestSuccess(HelloWorldLambdaTestCase):
             'message': f'Bad request syntax or unsupported method. Request path: {path}. HTTP method: {method}'
         }
 
-        self.assertEqual(response, json.dumps(expected_response))
+        self.assertEqual(response, expected_response)
 
     def test_fail_wrong_request(self):
         path = '/hello'
@@ -69,5 +69,5 @@ class TestSuccess(HelloWorldLambdaTestCase):
             'message': f'Bad request syntax or unsupported method. Request path: {path}. HTTP method: {method}'
         }
 
-        self.assertEqual(response, json.dumps(expected_response))
+        self.assertEqual(response, expected_response)
 
