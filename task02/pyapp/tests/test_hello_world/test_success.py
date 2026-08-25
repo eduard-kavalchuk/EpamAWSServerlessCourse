@@ -20,7 +20,13 @@ class TestSuccess(HelloWorldLambdaTestCase):
         response = self.HANDLER.handle_request(event, context)
         expected_response = {
             'statusCode': 200,
-            'message': 'Hello from Lambda'
+            'headers': {
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps({
+                'statusCode': 200,
+                'message': 'Hello from Lambda'
+            })
         }
 
         self.assertEqual(response, expected_response)
@@ -41,9 +47,16 @@ class TestSuccess(HelloWorldLambdaTestCase):
         context = {}
 
         response = self.HANDLER.handle_request(event, context)
+
         expected_response = {
             'statusCode': 400,
-            'message': f'Bad request syntax or unsupported method. Request path: {path}. HTTP method: {method}'
+            'headers': {
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps({
+                'statusCode': 400,
+                'message': f'Bad request syntax or unsupported method. Request path: {path}. HTTP method: {method}'
+             })
         }
 
         self.assertEqual(response, expected_response)
@@ -65,8 +78,14 @@ class TestSuccess(HelloWorldLambdaTestCase):
 
         response = self.HANDLER.handle_request(event, context)
         expected_response = {
-            'statusCode': 400,
-            'message': f'Bad request syntax or unsupported method. Request path: {path}. HTTP method: {method}'
+           'statusCode': 400,
+           'headers': {
+               'Content-Type': 'application/json'
+           },
+           'body': json.dumps({
+               'statusCode': 400,
+               'message': f'Bad request syntax or unsupported method. Request path: {path}. HTTP method: {method}'
+            })
         }
 
         self.assertEqual(response, expected_response)
