@@ -58,3 +58,11 @@ if [ $? -eq 0 ]; then
 else
     echo "✅ Copying to bucket-2 DENIED! The bucket policy is working!"
 fi
+
+# Step 9: Cleanup: Unset credentials (you can skip it because default credentials are set  in the next step)
+unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
+
+# Step 10: Set default credentials
+export AWS_ACCESS_KEY_ID=$(echo $DEFAULT_AWS_ACCESS_KEY_ID)
+export AWS_SECRET_ACCESS_KEY=$(echo $DEFAULT_SECRET_ACCESS_KEY)
+export AWS_SESSION_TOKEN=$(echo $DEFAULT_SESSION_TOKEN)
