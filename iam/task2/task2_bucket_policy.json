@@ -1,0 +1,20 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::536697226993:role/cmtr-mxhmo8sx-iam-pela-iam_role"
+            },
+            "Action": [
+                "s3:ListBucket",
+                "s3:GetObject",
+                "s3:PutObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::cmtr-mxhmo8sx-iam-pela-bucket-1-3753451",
+                "arn:aws:s3:::cmtr-mxhmo8sx-iam-pela-bucket-1-3753451/*"
+            ]
+        }
+    ]
+}

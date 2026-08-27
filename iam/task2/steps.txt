@@ -1,0 +1,18 @@
+1. Create and attach an inline identity-based policy to the cmtr-mxhmo8sx-iam-pela-iam_role role that allows all buckets to be listed.
+2. Create a resource-based S3 bucket policy that allows to get and put an object as well as list the objects in the cmtr-mxhmo8sx-iam-pela-bucket-1-3753451 bucket. The cmtr-mxhmo8sx-iam-pela-iam_role role must be allowed to perform all of these actions for the cmtr-mxhmo8sx-iam-pela-bucket-1-3753451 bucket only; do not allow access to all principals.
+
+Success criteria:
+You can list all the buckets.
+You can list, get, and put objects only in the cmtr-mxhmo8sx-iam-pela-bucket-1-3753451 bucket.
+You can't list, get, or put objects in the cmtr-mxhmo8sx-iam-pela-bucket-2-3753451 bucket.
+
+
+
+aws iam put-role-policy \
+    --role-name cmtr-mxhmo8sx-iam-pela-iam_role \
+    --policy-name AllowListAllBucketsAndBucket1Operations \
+    --policy-document file://task2_identity_policy.json
+    
+aws s3api put-bucket-policy \
+    --bucket cmtr-mxhmo8sx-iam-pela-bucket-1-3753451 \
+    --policy file://task2_bucket-policy.json
