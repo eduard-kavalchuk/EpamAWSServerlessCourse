@@ -1,0 +1,5 @@
+1. Grant full access to the Amazon S3 service for the cmtr-mxhmo8sx-iam-peld-iam_role role. Please use an existing AWS policy; do not create your own.
+2. Update the resource-based S3 bucket policy to prohibit the deletion of any objects inside the cmtr-mxhmo8sx-iam-peld-bucket-3073266 bucket specifically for the cmtr-mxhmo8sx-iam-peld-iam_role role.
+
+Verification
+To ensure everything has been done correctly, use the policy simulator for the cmtr-mxhmo8sx-iam-peld-iam_role role and check to make sure you cannot delete objects in the cmtr-mxhmo8sx-iam-peld-bucket-3073266 bucket.
