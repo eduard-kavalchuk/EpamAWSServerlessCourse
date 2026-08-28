@@ -1,0 +1,12 @@
+In this task, you should work with the following resources:
+1. IAM Role ${iam_role}: A role with full access to IAM and S3 services.
+2. S3 Buckets ${s3_bucket_1} and ${s3_bucket_2}: The first bucket contains an object, which you need to copy to the second bucket.
+3. KMS Key ${kms_key_arn}: This key can only be used to encrypt objects in the second bucket; encrypting objects and the bucket itself with other keys is prohibited.
+
+Task description
+1. Grant all the necessary permissions for the ${iam_role} role to work with the key. Do not grant full administrator access! 
+2. Enable server-side encryption for the ${s3_bucket_2} bucket using the AWS KMS key with the ${kms_key_arn} ARN.
+
+Verification
+Make sure you can put a new encrypted object in the encrypted bucket. To do this, copy the confidential_credentials.csv file from the ${s3_bucket_1} bucket to the ${s3_bucket_2} bucket using AWS CLI. As a result, the copied file confidential_credentials.csv should be encrypted.
+
