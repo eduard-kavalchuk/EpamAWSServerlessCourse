@@ -1,3 +1,7 @@
+# Variables
+ROLE_ASSUME="cmtr-mxhmo8sx-iam-ar-iam_role-assume"
+ROLE_READONLY="cmtr-mxhmo8sx-iam-ar-iam_role-readonly"
+
 echo "Test 1: Can the Assume Role Assume the Readonly Role?"
 echo
 
@@ -15,15 +19,15 @@ echo "Getting Account ID..."
 CALLER_IDENTITY=$(aws sts get-caller-identity)
 ACCOUNT_ID=$(echo $CALLER_IDENTITY | jq -r '.Account')
 
-# Assume cmtr-mxhmo8sx-iam-ar-iam_role-assume role
-echo "Trying to assume cmtr-mxhmo8sx-iam-ar-iam_role-assume role..."
+# Assume ${ROLE_ASSUME} role
+echo "Trying to assume ${ROLE_ASSUME} role..."
 
-CREDS=$(aws sts assume-role --role-arn arn:aws:iam::${ACCOUNT_ID}:role/cmtr-mxhmo8sx-iam-ar-iam_role-assume --role-session-name "TestSession")
+CREDS=$(aws sts assume-role --role-arn arn:aws:iam::${ACCOUNT_ID}:role/${ROLE_ASSUME} --role-session-name "TestSession")
 
 if [ $? -eq 0 ]; then
-    echo "✅ cmtr-mxhmo8sx-iam-ar-iam_role-assume role was assumed!"
+    echo "✅ ${ROLE_ASSUME} role was assumed!"
 else
-    echo "❌ cmtr-mxhmo8sx-iam-ar-iam_role-assume role was not assumed!"
+    echo "❌ ${ROLE_ASSUME} role was not assumed!"
 fi
 
 # Export the credentials
@@ -35,9 +39,9 @@ export AWS_SESSION_TOKEN=$(echo $CREDS | jq -r '.Credentials.SessionToken')
 
 
 # Now try to assume the readonly role
-echo "Trying to assume cmtr-mxhmo8sx-iam-ar-iam_role-readonly role..."
+echo "Trying to assume ${ROLE_READONLY} role..."
 
-CREDS=$(aws sts assume-role --role-arn arn:aws:iam::${ACCOUNT_ID}:role/cmtr-mxhmo8sx-iam-ar-iam_role-readonly --role-session-name "TestReadonlySession")
+CREDS=$(aws sts assume-role --role-arn arn:aws:iam::${ACCOUNT_ID}:role/${ROLE_READONLY} --role-session-name "TestReadonlySession")
 
 if [ $? -eq 0 ]; then
     echo "✅ Readonly role was assumed!"
