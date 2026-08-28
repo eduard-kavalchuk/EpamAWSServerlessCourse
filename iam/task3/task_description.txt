@@ -1,0 +1,7 @@
+Configure proper permissions for the cmtr-mxhmo8sx-iam-ar-iam_role-assume role, allowing it to assume the cmtr-mxhmo8sx-iam-ar-iam_role-readonly role. Do not grant full administrator access!
+Grant full read-only access for the cmtr-mxhmo8sx-iam-ar-iam_role-readonly role. Please use an existing AWS policy; do not create your own.
+Configure the correct trust policy for the cmtr-mxhmo8sx-iam-ar-iam_role-readonly role to allow it to be assumed by the cmtr-mxhmo8sx-iam-ar-iam_role-assume role.
+
+Success criteria:
+The cmtr-mxhmo8sx-iam-ar-iam_role-assume role can assume other roles.
+The cmtr-mxhmo8sx-iam-ar-iam_role-readonly role can perform read-only actions and is not allowed to perform write actions.

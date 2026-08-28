@@ -5,14 +5,3 @@ Success criteria:
 You can list all the buckets.
 You can list, get, and put objects only in the cmtr-mxhmo8sx-iam-pela-bucket-1-3753451 bucket.
 You can't list, get, or put objects in the cmtr-mxhmo8sx-iam-pela-bucket-2-3753451 bucket.
-
-
-
-aws iam put-role-policy \
-    --role-name cmtr-mxhmo8sx-iam-pela-iam_role \
-    --policy-name AllowListAllBucketsAndBucket1Operations \
-    --policy-document file://task2_identity_policy.json
-    
-aws s3api put-bucket-policy \
-    --bucket cmtr-mxhmo8sx-iam-pela-bucket-1-3753451 \
-    --policy file://task2_bucket-policy.json
