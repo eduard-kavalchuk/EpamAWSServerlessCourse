@@ -1,0 +1,14 @@
+The Goal of the Task
+To grant the correct permissions to a Lambda function so that it can access the necessary resources and other resources can access it as well.
+
+Task Resources
+Region-specific resources are created in the eu-west-1 region. For more details about regional services, see AWS Services by Region.
+In this task, you will work with the following resources:
+    Lambda function cmtr-mxhmo8sx-iam-lp-lambda: Returns a list of Lambda functions in the AWS account. This function has an execution role cmtr-mxhmo8sx-iam-lp-iam_role and a resource-based policy and serves as the HTTP API back end.
+    Lambda execution role cmtr-mxhmo8sx-iam-lp-iam_role.
+    API Gateway cmtr-mxhmo8sx-iam-lp-apigwv2_api: An HTTP API integrated with the cmtr-mxhmo8sx-iam-lp-lambda function.
+
+Task Flow
+You must achieve the following objectives in two moves:
+    Grant the correct permissions to the Lambda function so it can access the resources it needs based on the function code. Use the AWS managed policy that grants access to Lambda API actions, and follow the principle of least privilege. Please use the existing AWS policy; do not create your own. Documentation - Adding and removing IAM identity permissions
+    Grant the correct permissions to the Lambda function so that the HTTP API can invoke it. add-permission
