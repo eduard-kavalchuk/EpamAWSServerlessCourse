@@ -1,0 +1,47 @@
+Please help me perform the following AWS task.
+
+<u>The Goal of the Task</u>
+To integrate API Gateway with a Lambda function.
+
+<u>Task Resources</u>
+Region-specific resources are created in the ${aws_region} region. For more details about regional services, see AWS Services by Region.
+
+The following infrastructure has been created for you:
+    API Gateway: ${api_gateway}
+    Route ID: ${route_id}
+    Lambda function: ${lambda_function_name}
+
+
+<u>Task Flow</u>
+
+The Lambda function code in Python has already been deployed. Your task is to:
+
+    Integrate the ${lambda_function_name} Lambda function with the ${api_gateway} API gateway to handle requests from the existing ${route_id} route.
+    Configure the ${lambda_function_name} function to return a list of contacts when invoked through GET /contacts:
+
+[
+  {
+    "id": 1,
+    "name": "Elma Herring",
+    "email": "elmaherring@unq.com",
+    "phone": "+1 (913) 497-2020"
+  },
+  {
+    "id": 2,
+    "name": "Bell Burgess",
+    "email": "bellburgess@unq.com",
+    "phone": "+1 (887) 478-2693"
+  },
+  {
+    "id": 3,
+    "name": "Hobbs Ferrell",
+    "email": "hobbsferrell@unq.com",
+    "phone": "+1 (862) 581-3022"
+  }
+]
+
+<u>Verification</u>
+To make sure everything is set up correctly, check to make sure the updated Lambda function returns the list of contacts. This can be done in the AWS Management Console or via the AWS CLI.
+
+
+I would like to have this task implemented as a single Bash script with Verification as the last step.
