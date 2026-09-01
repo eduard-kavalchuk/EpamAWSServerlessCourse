@@ -1,0 +1,15 @@
+In this task, you should work with the following resources:
+
+    S3 Bucket ${bucket_name}: This bucket contains an input/ folder where you will upload files.
+    SQS Queue ${queue_name}: This SQS queue needs to be configured as the notification destination for the S3 bucket and as the event source for the Lambda function.
+    Lambda Function ${lambda_function}: This Lambda function will poll for messages as they arrive in the SQS queue after S3 uploads, transform the files, and store the processed files in the S3 bucket's output/ directory.
+
+All necessary permissions and policies have already been set.
+
+What should be done:
+1. Create an event notification in the S3 bucket with the prefix input/ for all object creation events and set the ${queue_name} SQS queue as the destination to publish the events.
+2. Configure the Lambda function trigger in the SQS queue to execute the function each time messages arrive in the queue. Wait for the trigger to be created.
+
+
+Verification criteria:
+Add a text file to /input folder. An /output folder should be created with a copy of the text file (with a different name).
