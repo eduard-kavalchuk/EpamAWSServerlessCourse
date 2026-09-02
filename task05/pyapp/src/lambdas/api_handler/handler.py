@@ -1,6 +1,7 @@
 import json
 import uuid
 import boto3
+import os
 
 from datetime import datetime, timezone
 
@@ -12,7 +13,7 @@ _LOG = get_logger(__name__)
 
 def get_table():
     dynamodb = boto3.resource("dynamodb")
-    return dynamodb.Table("cmtr-mxhmo8sx-Events")
+    return dynamodb.Table(os.environ["EVENTS_TABLE"])
 
 
 class ApiHandler(AbstractLambda):

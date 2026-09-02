@@ -15,7 +15,9 @@
     }
   ],
   "event_sources": [],
-  "env_variables": {},
+  "env_variables": {
+    "EVENTS_TABLE": "${Events}"
+  },
   "publish_version": true,
   "alias": "${lambdas_alias_name}",
   "url_config": {},
