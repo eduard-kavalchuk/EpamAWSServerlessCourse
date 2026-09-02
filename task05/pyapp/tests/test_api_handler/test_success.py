@@ -4,6 +4,9 @@ from pyapp.tests.test_api_handler import ApiHandlerLambdaTestCase
 import json
 from unittest.mock import Mock, patch
 
+import os
+
+os.environ["EVENTS_TABLE"] = "Events"
 
 class TestSuccess(ApiHandlerLambdaTestCase):
 
