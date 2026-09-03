@@ -1,0 +1,34 @@
+scalar AWSJSON
+scalar AWSDateTime
+
+type Meta {
+  key1: Int!
+  key2: String!
+}
+
+type Payload {
+  meta: Meta!
+}
+
+type Event {
+  id: ID!
+  userId: Int!
+  createdAt: AWSDateTime!
+  payLoad: Payload!
+}
+
+type CreateEventResponse {
+  id: ID!
+  createdAt: AWSDateTime!
+}
+
+type Query {
+  getEvent(id: ID!): Event
+}
+
+type Mutation {
+  createEvent(
+    userId: Int!
+    payLoad: AWSJSON!
+  ): CreateEventResponse!
+}
