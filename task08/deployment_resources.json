@@ -27,7 +27,6 @@
   },
   "uuid-storage": {
     "resource_type": "s3_bucket",
-    "bucket_name": "uuid-storage",
     "acl": "private",
     "cors": [],
     "policy": {},
@@ -44,19 +43,6 @@
     "rule_type": "schedule",
     "tags": {},
     "expression": "rate(1 minute)"
-  },
-  "uuid_generator-role": {
-    "resource_type": "iam_role",
-    "principal_service": "lambda.amazonaws.com",
-    "predefined_policies": [],
-    "custom_policies": [
-      "lambda-basic-execution",
-      "UuidGeneratorPolicy"
-    ],
-    "allowed_accounts": [],
-    "instance_profile": false,
-    "permissions_boundary": "",
-    "tags": {}
   },
   "UuidGeneratorPolicy": {
     "resource_type": "iam_policy",
