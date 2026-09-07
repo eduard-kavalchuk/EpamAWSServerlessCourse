@@ -35,8 +35,26 @@ class Processor(AbstractLambda):
             response.raise_for_status()
             forecast = response.json()
 
+            filtered_forecast = {
+                "elevation": forecast["elevation"],
+                "generationtime_ms": forecast["generationtime_ms"],
+                "hourly": {
+                    "temperature_2m": forecast["hourly"]["temperature_2m"],
+                    "time": forecast["hourly"]["time"]
+                },
+                "hourly_units": {
+                    "temperature_2m": forecast["hourly_units"]["temperature_2m"],
+                    "time": forecast["hourly_units"]["time"]
+                },
+                "latitude": forecast["latitude"],
+                "longitude": forecast["longitude"],
+                "timezone": forecast["timezone"],
+                "timezone_abbreviation": forecast["timezone_abbreviation"],
+                "utc_offset_seconds": forecast["utc_offset_seconds"]
+            }
+
             ddb_forecast = json.loads(
-                json.dumps(forecast),
+                json.dumps(filtered_forecast),
                 parse_float=Decimal
             )
 
@@ -50,7 +68,7 @@ class Processor(AbstractLambda):
 
             return {
                 "statusCode": 200,
-                "body": json.dumps(forecast)
+                "body": json.dumps(filtered_forecast)
             }
 
         except Exception as exc:
