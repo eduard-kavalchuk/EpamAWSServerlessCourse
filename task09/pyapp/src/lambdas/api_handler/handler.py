@@ -46,8 +46,16 @@ class ApiHandler(AbstractLambda):
 
             return {
                 "statusCode": 400,
-                "message": message
+                "body": json.dumps({
+                    "statusCode": 400,
+                    "message": message
+                })
             }
+
+            # return {
+            #     "statusCode": 400,
+            #     "message": message
+            # }
 
         try:
             print("Creating OpenMeteoClient")
@@ -64,6 +72,8 @@ class ApiHandler(AbstractLambda):
                 "statusCode": 200,
                 "body": json.dumps(weather)
             }
+
+            
 
         except Exception as exc:
             print(f"Weather request failed: {str(exc)}")

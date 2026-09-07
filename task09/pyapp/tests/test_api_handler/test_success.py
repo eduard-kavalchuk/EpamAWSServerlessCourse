@@ -21,6 +21,8 @@ class TestSuccess(ApiHandlerLambdaTestCase):
 
         response = self.HANDLER.handle_request(event, None)
 
+        print(response)
+
         self.assertEqual(response["statusCode"], 200)
 
     def test_bad_request(self):
