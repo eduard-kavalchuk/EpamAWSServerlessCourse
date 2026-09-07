@@ -1,47 +1,48 @@
-# task10
+# ------- [ Testing the deploy ] --------------------------------------
 
-High level project overview - business value it brings, non-detailed technical overview.
+# 1. Verify that lambda function exists:
+aws lambda list-functions \
+    --query 'Functions[].FunctionName' \
+    --output table
 
-### Notice
-All the technical details described below are actual for the particular
-version, or a range of versions of the software.
-### Actual for versions: 1.0.0
+* cmtr-mxhmo8sx-processor
 
-## task10 diagram
+# 2. Verify that Weather table of DynamoDB exists:
+aws dynamodb list-tables
 
-![task10](pics/task10_diagram.png)
+* cmtr-mxhmo8sx-Weather
 
-## Lambdas descriptions
+# 3. Check the content of cmtr-mxhmo8sx-Weather:
+aws dynamodb scan --table-name cmtr-mxhmo8sx-Weather
 
-### Lambda `lambda-name`
-Lambda feature overview.
+* There should be no items
 
-### Required configuration
-#### Environment variables
-* environment_variable_name: description
+# 4. Verify Function URL:
+aws lambda get-function-url-config \
+    --function-name cmtr-mxhmo8sx-processor:learn
 
-#### Trigger event
-```buildoutcfg
-{
-    "key": "value",
-    "key1": "value1",
-    "key2": "value3"
+* "FunctionUrl": "https://6fnjajpuovkpklu72bpwvyaf4u0pdxhf.lambda-url.eu-west-1.on.aws/"
+
+# 5. Test the function:
+curl https://6fnjajpuovkpklu72bpwvyaf4u0pdxhf.lambda-url.eu-west-1.on.aws/
+
+# 6. Check the content of cmtr-mxhmo8sx-Weather:
+aws dynamodb scan --table-name cmtr-mxhmo8sx-Weather
+
+# ----------- [ Verify X-Ray ] ----------------------------
+
+# 1. Make sure "TracingConfig" is "Active":
+aws lambda get-function-configuration \
+  --function-name cmtr-mxhmo8sx-processor:learn
+
+* Look for:
+"TracingConfig": {
+    "Mode": "Active"
 }
-```
-* key: [Required] description of key
-* key1: description of key1
 
-#### Expected response
-```buildoutcfg
-{
-    "status": 200,
-    "message": "Operation succeeded"
-}
-```
----
+# 2. Query X-Ray:
+aws xray get-service-graph \
+  --start-time $(date -u -d "15 minutes ago" +%s) \
+  --end-time $(date -u +%s)
 
-## Deployment from scratch
-1. action 1 to deploy the software
-2. action 2
-...
-
+* JSON must be not empty
