@@ -33,18 +33,10 @@ Open .syndicate-config-dev/syndicate_aliases.yml file and change "lambdas_alias_
 # 9. Generate lambda layer:
 uv run syndicate generate lambda-layer --name=weather_sdk --runtime=python
 
-# 10. Add the HTTP dependency: inside layers/open_meteo_sdk/requirements.txt put:
+# 10. Add the HTTP dependency: inside layers/weather_sdk/requirements.txt put:
 requests
 
-# 11. Create the custom SDK code. Create a package inside the layer:
-layers/open_meteo_sdk/
-├── weather_sdk/
-│   ├── __init__.py
-│   └── client.py
-├── requirements.txt
-└── lambda_layer_config.json
-
-# 12. Put SDK implementation into client.py:
+# 11. Put SDK implementation into client.py:
 
 import requests
 
@@ -62,15 +54,9 @@ class OpenMeteoClient:
         response.raise_for_status()
         return response.json()
 
-# 13. Add the following dependency to lambda_config.json:
-"dependencies": [
-    {
-      "resource_name": "open_meteo_sdk",
-      "resource_type": "lambda_layer"
-    }
-  ]
+# 12. Add the following dependency to lambda_config.json:
 "layers": [
-        "open_meteo_sdk"
+        "weather_sdk"
     ],
 
 # 14. Implement your lambda function.
@@ -124,16 +110,24 @@ aws lambda get-function-url-config \
 
 * ATTENTION! Make sure you use ":learn" in call above! Otherwise, an exception will be returnedQ
 
-* "FunctionUrl": "https://hzlb34utva6ek2ms63nrjpc7tq0nbqab.lambda-url.eu-west-1.on.aws/"
+* "FunctionUrl": "https://atjowniizimtu3vj33spqwr52a0gccgw.lambda-url.eu-west-1.on.aws/"
 
-# 6. Test the URL:
-curl https://hzlb34utva6ek2ms63nrjpc7tq0nbqab.lambda-url.eu-west-1.on.aws/weather
+# 6. Test correct endpoint:
+curl https://atjowniizimtu3vj33spqwr52a0gccgw.lambda-url.eu-west-1.on.aws/weather
+
+* This one should return correct resonse
+* In case of failure see instructions below on how to debug
+
+# 7. Test incorrect endpoint:
+curl https://atjowniizimtu3vj33spqwr52a0gccgw.lambda-url.eu-west-1.on.aws/incorrect
+
+
+
 
 * In case of failure see instructions below on how to debug
 
-# ---------- [ Debugging Internal Server Error ] -------------------------------------
+# ---------- [ Debugging Internal Server Error ] -----------------------------
 
 aws logs tail \
 /aws/lambda/cmtr-mxhmo8sx-api_handler \
 --since 10m
-

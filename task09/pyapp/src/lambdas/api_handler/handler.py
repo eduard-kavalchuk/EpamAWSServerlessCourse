@@ -6,6 +6,7 @@ from commons.abstract_lambda import AbstractLambda
 try:
     from weather_sdk import OpenMeteoClient
 except ImportError:
+    # For pytest only
     from lambdas.layers.weather_sdk.weather_sdk import OpenMeteoClient
 
 _LOG = get_logger(__name__)
@@ -17,8 +18,6 @@ class ApiHandler(AbstractLambda):
         pass
         
     def handle_request(self, event, context):
-        print(f"Received event: {json.dumps(event)}")
-
         path = (
             event.get("rawPath")
             or event.get("path")
@@ -33,16 +32,11 @@ class ApiHandler(AbstractLambda):
             or ""
         )
 
-        print(f"Request path: {path}")
-        print(f"Request method: {method}")
-
         if path != "/weather" or method != "GET":
             message = (
                 f"Bad request syntax or unsupported method. "
                 f"Request path: {path}. HTTP method: {method}"
             )
-
-            print(message)
 
             return {
                 "statusCode": 400,
@@ -52,32 +46,16 @@ class ApiHandler(AbstractLambda):
                 })
             }
 
-            # return {
-            #     "statusCode": 400,
-            #     "message": message
-            # }
-
         try:
-            print("Creating OpenMeteoClient")
-
             client = OpenMeteoClient()
-
-            print("Requesting weather forecast")
-
             weather = client.get_weather()
-
-            print("Forecast successfully retrieved")
 
             return {
                 "statusCode": 200,
                 "body": json.dumps(weather)
             }
 
-            
-
         except Exception as exc:
-            print(f"Weather request failed: {str(exc)}")
-
             return {
                 "statusCode": 500,
                 "body": json.dumps({
