@@ -20,7 +20,8 @@
             "cognito-idp:AdminSetUserPassword",
             "cognito-idp:ListUsers",
             "cognito-idp:AdminConfirmSignUp",
-            "cognito-idp:ListUserPools"
+            "cognito-idp:ListUserPools",
+            "cognito-idp:ListUserPoolClients"
           ],
           "Effect": "Allow",
           "Resource": "*"

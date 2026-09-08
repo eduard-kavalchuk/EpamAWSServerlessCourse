@@ -39,35 +39,117 @@ class ApiHandler(AbstractLambda):
         pass
         
     def handle_request(self, event, context):
-        print("USER_POOL_NAME =", os.environ["USER_POOL_NAME"])
+        print(f"REQUEST: {event}")
 
-        return self._signup(event)
+        if not isinstance(event, dict):
+            return {
+                "statusCode": 400,
+                "body": json.dumps({
+                    "message": "Invalid request"
+                })
+            }
+
+        if (
+            "firstName" in event
+            and "lastName" in event
+            and "email" in event
+            and "password" in event
+        ):
+            return self._signup(event)
+
+        if (
+            "email" in event
+            and "password" in event
+        ):
+            return self._signin(event)
+
+        return {
+            "statusCode": 400,
+            "body": json.dumps({
+                "message": "Invalid request"
+            })
+        }
+
+
+    def _signin(self, event):
+        try:
+            email = event["email"]
+            password = event["password"]
+
+            user_pool_name = os.environ["USER_POOL_NAME"]
+            cognito = boto3.client("cognito-idp")
+            user_pool_id = None
+            paginator = cognito.get_paginator("list_user_pools")
+
+            for page in paginator.paginate(MaxResults=60):
+                for pool in page["UserPools"]:
+                    if pool["Name"] == user_pool_name:
+                        user_pool_id = pool["Id"]
+                        break
+
+                if user_pool_id:
+                    break
+
+            if not user_pool_id:
+                raise Exception("User pool not found")
+
+            response = cognito.list_user_pool_clients(
+                UserPoolId=user_pool_id,
+                MaxResults=60
+            )
+
+            print(response["UserPoolClients"])
+
+            client_id = None
+            for client in response["UserPoolClients"]:
+                if client["ClientName"] == "booking-client":
+                    client_id = client["ClientId"]
+
+            if not client_id:
+                raise Exception("User pool client not found")
+
+            response = cognito.admin_initiate_auth(
+                UserPoolId=user_pool_id,
+                ClientId=client_id,
+                AuthFlow="ADMIN_USER_PASSWORD_AUTH",
+                AuthParameters={
+                    "USERNAME": email,
+                    "PASSWORD": password
+                }
+            )
+
+            tokens = response["AuthenticationResult"]
+
+            return {
+                "statusCode": 200,
+                "body": json.dumps({
+                    "accessToken": tokens["AccessToken"],
+                    "idToken": tokens["IdToken"],
+                    "refreshToken": tokens["RefreshToken"]
+                })
+            }
+        except KeyError as exc:
+            return {
+                "statusCode": 400,
+                "body": json.dumps({
+                    "message": "Missing required field",
+                    "exception": exc
+                })
+            }
+
+        except Exception as exc:
+            print(f"Signup error: {exc}")
+
+            return {
+                "statusCode": 400,
+                "body": json.dumps({
+                    "message": str(exc)
+                })
+            }
+
     
-        # print(json.dumps(event))
-        # print("CONTEXT:", context)
-        # print("CONTEXT TYPE:", type(context))
-
-        # path = event.get("resource")
-        # method = event.get("httpMethod")
-
-        # if path == "/signup" and method == "POST":
-        #     print("SIGNUP HANDLER CALLED")
-        #     return self._signup(event)
-        
-        # return {
-        #     "statusCode": 200,
-        #     "body": json.dumps({
-        #         "resource": event.get("resource"),
-        #         "path": event.get("path"),
-        #         "httpMethod": event.get("httpMethod")
-        #     })
-        # }
-
     def _signup(self, event):
         try:
-            # body = json.loads(event.get("body") or "{}")
-            print(f"SIGNUP REQUEST: {event}")
-
             first_name = event["firstName"]
             last_name = event["lastName"]
             email = event["email"]

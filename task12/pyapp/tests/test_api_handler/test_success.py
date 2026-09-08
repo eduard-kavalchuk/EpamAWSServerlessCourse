@@ -5,6 +5,7 @@ from unittest.mock import MagicMock, patch
 
 import os
 
+
 os.environ["TABLES_TABLE"] = "Tables"
 os.environ["RESERVATIONS_TABLE"] = "Reservations"
 os.environ["USER_POOL_NAME"] = "simple-booking-userpool"
@@ -12,16 +13,70 @@ os.environ["USER_POOL_NAME"] = "simple-booking-userpool"
 
 class TestSuccess(ApiHandlerLambdaTestCase):
 
-    # def test_generic(self):
-    #     event = {
-    #         "resource": "This is a resource",
-    #         "path": "This is path",
-    #         "httpMethod": "This is httpMethod"
-    #     }
+    def test_signin_success(self):
+        event = {
+            "email": "john@example.com",
+            "password": "Password123$"
+        }
 
-    #     response = self.HANDLER.handle_request(event, None)
+        cognito_mock = MagicMock()
 
-    #     self.assertEqual(response["statusCode"], 200)
+        cognito_mock.get_paginator.return_value.paginate.return_value = [
+            {
+                "UserPools": [
+                    {
+                        "Name": "cmtr-mxhmo8sx-simple-booking-userpool",
+                        "Id": "eu-west-1_TEST_POOL"
+                    }
+                ]
+            }
+        ]
+
+        cognito_mock.list_user_pool_clients.return_value = {
+            "UserPoolClients": [
+                {
+                    "ClientName": "booking-client",
+                    "ClientId": "TEST_CLIENT_ID"
+                }
+            ]
+        }
+
+        cognito_mock.admin_initiate_auth.return_value = {
+            "AuthenticationResult": {
+                "AccessToken": "ACCESS_TOKEN",
+                "IdToken": "ID_TOKEN",
+                "RefreshToken": "REFRESH_TOKEN"
+            }
+        }
+
+        with patch.dict(
+            os.environ,
+            {
+                "USER_POOL_NAME": "cmtr-mxhmo8sx-simple-booking-userpool"
+            }
+        ):
+            with patch(
+                "lambdas.api_handler.handler.boto3.client",
+                return_value=cognito_mock
+            ):
+                response = self.HANDLER.handle_request(event, None)
+
+        assert response["statusCode"] == 200
+
+        cognito_mock.list_user_pool_clients.assert_called_once_with(
+            UserPoolId="eu-west-1_TEST_POOL",
+            MaxResults=60
+        )
+
+        cognito_mock.admin_initiate_auth.assert_called_once_with(
+            UserPoolId="eu-west-1_TEST_POOL",
+            ClientId="TEST_CLIENT_ID",
+            AuthFlow="ADMIN_USER_PASSWORD_AUTH",
+            AuthParameters={
+                "USERNAME": "john@example.com",
+                "PASSWORD": "Password123$"
+            }
+        )
 
 
     def test_signup_success(self):
@@ -32,12 +87,6 @@ class TestSuccess(ApiHandlerLambdaTestCase):
             "lastName": "Last name",
             "email": "test@example.com",
             "password": "Password123$"
-            # "body": json.dumps({
-            #     "firstName": "First name",
-            #     "lastName": "Last name",
-            #     "email": "test@example.com",
-            #     "password": "Password123$"
-            # })
         }
 
         cognito_mock = MagicMock()
@@ -57,7 +106,7 @@ class TestSuccess(ApiHandlerLambdaTestCase):
             with patch("boto3.client", return_value=cognito_mock):
                 response = self.HANDLER.handle_request(event, None)
 
-        print("RESPONCE:")
+        print("RESPONSE:")
         print(response)
         assert response["statusCode"] == 200
 
