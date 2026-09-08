@@ -19,6 +19,10 @@ def get_reservations_table():
     return dynamodb.Table(os.environ["RESERVATIONS_TABLE"])
 
 
+def get_pool_name():
+    return os.environ["USER_POOL_NAME"]
+
+
 class ApiHandler(AbstractLambda):
 
     def validate_request(self, event) -> dict:

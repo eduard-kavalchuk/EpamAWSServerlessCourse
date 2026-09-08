@@ -16,12 +16,17 @@
     {
       "resource_type": "dynamodb_table",
       "resource_name": "Reservations"
+    },
+    {
+      "resource_type": "cognito_idp",
+      "resource_name": "simple-booking-userpool"
     }
   ],
   "event_sources": [],
   "env_variables": {
     "TABLES_TABLE": "Tables",
-    "RESERVATIONS_TABLE": "Reservations"
+    "RESERVATIONS_TABLE": "Reservations",
+    "USER_POOL_NAME": "${booking_userpool}"
   },
   "publish_version": true,
   "alias": "${lambdas_alias_name}",

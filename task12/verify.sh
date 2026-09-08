@@ -169,3 +169,21 @@ else
     echo "✅ Success: statusCode is 200"
 fi
 
+
+echo "🔵 Getting Cognito UserPool name and ID..."
+
+COGNITO_USERPOOL_NAME=$(aws cognito-idp list-user-pools --max-results 1 --query 'UserPools[0].Name' --output text 2>/dev/null)
+
+if [ -z "$COGNITO_USERPOOL_NAME" ] || [ "$COGNITO_USERPOOL_NAME" = "None" ]; then
+    echo "❌ Error: No user pool found or unable to retrieve name"
+    exit 1
+else
+    echo "✅ ${COGNITO_USERPOOL_NAME}"
+fi
+
+COGNITO_USERPOOL_ID=$(aws cognito-idp list-user-pools --max-results 1 --query 'UserPools[0].Id' --output text 2>/dev/null)
+echo "✅ ${COGNITO_USERPOOL_ID}"
+
+
+
+
