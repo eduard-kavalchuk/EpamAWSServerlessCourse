@@ -19,7 +19,8 @@
             "cognito-idp:AdminInitiateAuth",
             "cognito-idp:AdminSetUserPassword",
             "cognito-idp:ListUsers",
-            "cognito-idp:AdminConfirmSignUp"
+            "cognito-idp:AdminConfirmSignUp",
+            "cognito-idp:ListUserPools"
           ],
           "Effect": "Allow",
           "Resource": "*"

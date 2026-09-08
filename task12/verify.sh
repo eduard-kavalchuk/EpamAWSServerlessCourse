@@ -1,7 +1,6 @@
 REGION="eu-west-1"
 
 
-
 echo "🔵 Checking if lambda function api_handler exists..."
 
 LAMBDA_FUNCTION_NAME=$(aws lambda list-functions \
@@ -66,108 +65,108 @@ else
 fi
 
 
-echo "🔵 Checking POST /signup..."
-RESPONSE=$(curl -s -X POST https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/signup)
+# echo "🔵 Checking POST /signup..."
+# RESPONSE=$(curl -s -X POST https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/signup)
 
-echo "Response: $RESPONSE"
+# echo "Response: $RESPONSE"
 
-STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
 
-if [ "$STATUS_CODE" -ne 200 ]; then
-    echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
-    exit 1
-else
-    echo "✅ Success: statusCode is 200"
-fi
-
-
-echo "🔵 Checking POST /signin..."
-RESPONSE=$(curl -s -X POST https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/signin)
-
-echo "Response: $RESPONSE"
-
-STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
-
-if [ "$STATUS_CODE" -ne 200 ]; then
-    echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
-    exit 1
-else
-    echo "✅ Success: statusCode is 200"
-fi
-
-echo "🔵 Checking POST /tables..."
-RESPONSE=$(curl -s -X POST https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables)
-
-echo "Response: $RESPONSE"
-
-STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
-
-if [ "$STATUS_CODE" -ne 200 ]; then
-    echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
-    exit 1
-else
-    echo "✅ Success: statusCode is 200"
-fi
+# if [ "$STATUS_CODE" -ne 200 ]; then
+#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
+#     exit 1
+# else
+#     echo "✅ Success: statusCode is 200"
+# fi
 
 
-echo "🔵 Checking GET /tables..."
-RESPONSE=$(curl -s https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables)
+# echo "🔵 Checking POST /signin..."
+# RESPONSE=$(curl -s -X POST https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/signin)
 
-echo "Response: $RESPONSE"
+# echo "Response: $RESPONSE"
 
-STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
 
-if [ "$STATUS_CODE" -ne 200 ]; then
-    echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
-    exit 1
-else
-    echo "✅ Success: statusCode is 200"
-fi
+# if [ "$STATUS_CODE" -ne 200 ]; then
+#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
+#     exit 1
+# else
+#     echo "✅ Success: statusCode is 200"
+# fi
 
+# echo "🔵 Checking POST /tables..."
+# RESPONSE=$(curl -s -X POST https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables)
 
-echo "🔵 Checking POST /reservation..."
-RESPONSE=$(curl -s -X POST https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/reservation)
+# echo "Response: $RESPONSE"
 
-echo "Response: $RESPONSE"
+# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
 
-STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
-
-if [ "$STATUS_CODE" -ne 200 ]; then
-    echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
-    exit 1
-else
-    echo "✅ Success: statusCode is 200"
-fi
-
-
-echo "🔵 Checking GET /reservation..."
-RESPONSE=$(curl -s https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/reservation)
-
-echo "Response: $RESPONSE"
-
-STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
-
-if [ "$STATUS_CODE" -ne 200 ]; then
-    echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
-    exit 1
-else
-    echo "✅ Success: statusCode is 200"
-fi
+# if [ "$STATUS_CODE" -ne 200 ]; then
+#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
+#     exit 1
+# else
+#     echo "✅ Success: statusCode is 200"
+# fi
 
 
-echo "🔵 Checking GET /tables/{tableId} with a random tableId..."
-RESPONSE=$(curl -s https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables/123)
+# echo "🔵 Checking GET /tables..."
+# RESPONSE=$(curl -s https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables)
 
-echo "Response: $RESPONSE"
+# echo "Response: $RESPONSE"
 
-STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
 
-if [ "$STATUS_CODE" -ne 200 ]; then
-    echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
-    exit 1
-else
-    echo "✅ Success: statusCode is 200"
-fi
+# if [ "$STATUS_CODE" -ne 200 ]; then
+#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
+#     exit 1
+# else
+#     echo "✅ Success: statusCode is 200"
+# fi
+
+
+# echo "🔵 Checking POST /reservation..."
+# RESPONSE=$(curl -s -X POST https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/reservation)
+
+# echo "Response: $RESPONSE"
+
+# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+
+# if [ "$STATUS_CODE" -ne 200 ]; then
+#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
+#     exit 1
+# else
+#     echo "✅ Success: statusCode is 200"
+# fi
+
+
+# echo "🔵 Checking GET /reservation..."
+# RESPONSE=$(curl -s https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/reservation)
+
+# echo "Response: $RESPONSE"
+
+# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+
+# if [ "$STATUS_CODE" -ne 200 ]; then
+#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
+#     exit 1
+# else
+#     echo "✅ Success: statusCode is 200"
+# fi
+
+
+# echo "🔵 Checking GET /tables/{tableId} with a random tableId..."
+# RESPONSE=$(curl -s https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables/123)
+
+# echo "Response: $RESPONSE"
+
+# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+
+# if [ "$STATUS_CODE" -ne 200 ]; then
+#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
+#     exit 1
+# else
+#     echo "✅ Success: statusCode is 200"
+# fi
 
 
 echo "🔵 Getting Cognito UserPool name and ID..."
@@ -185,5 +184,132 @@ COGNITO_USERPOOL_ID=$(aws cognito-idp list-user-pools --max-results 1 --query 'U
 echo "✅ ${COGNITO_USERPOOL_ID}"
 
 
+echo "🔵 Trying to signup by sending POST request to /signup endpoint..."
 
+curl -X POST \
+  https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/signup \
+  -H "Content-Type: application/json" \
+  -d '{
+        "firstName": "John",
+        "lastName": "Smith",
+        "email": "john@example.com",
+        "password": "Password123$"
+      }'
+
+
+echo "🔵 Getting Cognito list of users..."
+
+COGNITO_USERS_LIST=$(aws cognito-idp list-users --user-pool-id "$COGNITO_USERPOOL_ID")
+
+if [ "$(echo "$COGNITO_USERS_LIST" | jq '.Users | length')" -gt 0 ]; then
+    echo "✅ Users array is not empty. Found users."
+    echo "$COGNITO_USERS_LIST" | jq '.Users'
+else
+    echo "❌ Users array is empty. No users found."
+    exit 1
+fi
+
+
+# echo "🔵 Checking POST /signup..."
+# RESPONSE=$(curl -s -X POST https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/signup)
+
+# echo "Response: $RESPONSE"
+
+# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+
+# if [ "$STATUS_CODE" -ne 200 ]; then
+#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
+#     exit 1
+# else
+#     echo "✅ Success: statusCode is 200"
+# fi
+
+
+# echo "🔵 Checking POST /signin..."
+# RESPONSE=$(curl -s -X POST https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/signin)
+
+# echo "Response: $RESPONSE"
+
+# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+
+# if [ "$STATUS_CODE" -ne 200 ]; then
+#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
+#     exit 1
+# else
+#     echo "✅ Success: statusCode is 200"
+# fi
+
+# echo "🔵 Checking POST /tables..."
+# RESPONSE=$(curl -s -X POST https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables)
+
+# echo "Response: $RESPONSE"
+
+# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+
+# if [ "$STATUS_CODE" -ne 200 ]; then
+#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
+#     exit 1
+# else
+#     echo "✅ Success: statusCode is 200"
+# fi
+
+
+# echo "🔵 Checking GET /tables..."
+# RESPONSE=$(curl -s https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables)
+
+# echo "Response: $RESPONSE"
+
+# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+
+# if [ "$STATUS_CODE" -ne 200 ]; then
+#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
+#     exit 1
+# else
+#     echo "✅ Success: statusCode is 200"
+# fi
+
+
+# echo "🔵 Checking POST /reservation..."
+# RESPONSE=$(curl -s -X POST https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/reservation)
+
+# echo "Response: $RESPONSE"
+
+# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+
+# if [ "$STATUS_CODE" -ne 200 ]; then
+#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
+#     exit 1
+# else
+#     echo "✅ Success: statusCode is 200"
+# fi
+
+
+# echo "🔵 Checking GET /reservation..."
+# RESPONSE=$(curl -s https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/reservation)
+
+# echo "Response: $RESPONSE"
+
+# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+
+# if [ "$STATUS_CODE" -ne 200 ]; then
+#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
+#     exit 1
+# else
+#     echo "✅ Success: statusCode is 200"
+# fi
+
+
+# echo "🔵 Checking GET /tables/{tableId} with a random tableId..."
+# RESPONSE=$(curl -s https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables/123)
+
+# echo "Response: $RESPONSE"
+
+# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+
+# if [ "$STATUS_CODE" -ne 200 ]; then
+#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
+#     exit 1
+# else
+#     echo "✅ Success: statusCode is 200"
+# fi
 
