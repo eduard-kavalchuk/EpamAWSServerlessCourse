@@ -14,9 +14,17 @@ os.environ["USER_POOL_NAME"] = "simple-booking-userpool"
 class TestSuccess(ApiHandlerLambdaTestCase):
 
     def test_signin_success(self):
+    
+        EMAIL = "test@example.com"
+        PASSWORD = "Password123$"
+
         event = {
-            "email": "john@example.com",
-            "password": "Password123$"
+            "resource": "/signin",
+            "httpMethod": "POST",
+            "body": {
+                "email": EMAIL,
+                "password": PASSWORD
+            }
         }
 
         cognito_mock = MagicMock()
@@ -61,6 +69,8 @@ class TestSuccess(ApiHandlerLambdaTestCase):
             ):
                 response = self.HANDLER.handle_request(event, None)
 
+        print('RESPONSE:')
+        print(response)
         assert response["statusCode"] == 200
 
         body = json.loads(response["body"])
@@ -79,16 +89,28 @@ class TestSuccess(ApiHandlerLambdaTestCase):
             ClientId="TEST_CLIENT_ID",
             AuthFlow="ADMIN_USER_PASSWORD_AUTH",
             AuthParameters={
-                "USERNAME": "john@example.com",
-                "PASSWORD": "Password123$"
+                "USERNAME": EMAIL,
+                "PASSWORD": PASSWORD
             }
         )
 
     def test_signin_client_not_found(self):
+        EMAIL = "test@example.com"
+        PASSWORD = "Password123$"
+
         event = {
-            "email": "john@example.com",
-            "password": "Password123$"
+            "resource": "/signin",
+            "httpMethod": "POST",
+            "body": {
+                "email": EMAIL,
+                "password": PASSWORD
+            }
         }
+
+        # event = {
+        #     "email": "john@example.com",
+        #     "password": "Password123$"
+        # }
 
         cognito_mock = MagicMock()
 
@@ -126,13 +148,18 @@ class TestSuccess(ApiHandlerLambdaTestCase):
 
 
     def test_signup_success(self):
+        EMAIL = "test@example.com"
+        PASSWORD = "Password123$"
+
         event = {
             "resource": "/signup",
             "httpMethod": "POST",
-            "firstName": "First name",
-            "lastName": "Last name",
-            "email": "test@example.com",
-            "password": "Password123$"
+            "body": {
+                "firstName": "First name",
+                "lastName": "Last name",
+                "email": EMAIL,
+                "password": PASSWORD
+            }
         }
 
         cognito_mock = MagicMock()

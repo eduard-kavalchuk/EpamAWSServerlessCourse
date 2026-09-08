@@ -39,6 +39,8 @@ class ApiHandler(AbstractLambda):
         pass
         
     def handle_request(self, event, context):
+        print("RAW EVENT:", event)
+
         if not isinstance(event, dict):
             return {
                 "statusCode": 400,
@@ -47,18 +49,13 @@ class ApiHandler(AbstractLambda):
                 })
             }
 
-        if (
-            "firstName" in event
-            and "lastName" in event
-            and "email" in event
-            and "password" in event
-        ):
+        resource = event["resource"]
+        method = event["httpMethod"]
+
+        if resource == "/signup" and method == "POST":
             return self._signup(event)
 
-        if (
-            "email" in event
-            and "password" in event
-        ):
+        if resource == "/signin" and method == "POST":
             return self._signin(event)
 
         return {
@@ -71,8 +68,10 @@ class ApiHandler(AbstractLambda):
 
     def _signin(self, event):
         try:
-            email = event["email"]
-            password = event["password"]
+            body = event["body"]
+
+            email = body["email"]
+            password = body["password"]
 
             user_pool_name = os.environ["USER_POOL_NAME"]
             cognito = boto3.client("cognito-idp")
@@ -129,7 +128,7 @@ class ApiHandler(AbstractLambda):
                 "statusCode": 400,
                 "body": json.dumps({
                     "message": "Missing required field",
-                    "exception": exc
+                    "exception": str(exc)
                 })
             }
 
@@ -144,10 +143,14 @@ class ApiHandler(AbstractLambda):
     
     def _signup(self, event):
         try:
-            first_name = event["firstName"]
-            last_name = event["lastName"]
-            email = event["email"]
-            password = event["password"]
+            print("EVENT:")
+            print(event)
+            body = event["body"]
+
+            first_name = body["firstName"]
+            last_name = body["lastName"]
+            email = body["email"]
+            password = body["password"]
 
             if not EMAIL_PATTERN.match(email):
                 return {
@@ -236,7 +239,7 @@ class ApiHandler(AbstractLambda):
                 "statusCode": 400,
                 "body": json.dumps({
                     "message": "Missing required field",
-                    "exception": ex
+                    "exception": str(ex)
                 })
             }
 

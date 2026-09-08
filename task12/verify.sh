@@ -44,6 +44,9 @@ else
 fi
 
 echo
+echo https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api
+
+echo
 echo "🔵 Checking if DB tables exist..."
 
 TABLE_RESERVATIONS=$(aws dynamodb list-tables \
