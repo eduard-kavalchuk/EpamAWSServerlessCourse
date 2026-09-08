@@ -39,8 +39,6 @@ class ApiHandler(AbstractLambda):
         pass
         
     def handle_request(self, event, context):
-        print(f"REQUEST: {event}")
-
         if not isinstance(event, dict):
             return {
                 "statusCode": 400,
@@ -98,8 +96,6 @@ class ApiHandler(AbstractLambda):
                 MaxResults=60
             )
 
-            print(response["UserPoolClients"])
-
             client_id = None
             for client in response["UserPoolClients"]:
                 if client["ClientName"] == "booking-client":
@@ -138,8 +134,6 @@ class ApiHandler(AbstractLambda):
             }
 
         except Exception as exc:
-            print(f"Signup error: {exc}")
-
             return {
                 "statusCode": 400,
                 "body": json.dumps({
@@ -191,36 +185,44 @@ class ApiHandler(AbstractLambda):
             if not user_pool_id:
                 raise Exception("User pool not found")
 
-            cognito.admin_create_user(
-                UserPoolId=user_pool_id,
-                Username=email,
-                UserAttributes=[
-                    {
-                        "Name": "email",
-                        "Value": email
-                    },
-                    {
-                        "Name": "given_name",
-                        "Value": first_name
-                    },
-                    {
-                        "Name": "family_name",
-                        "Value": last_name
-                    },
-                    {
-                        "Name": "email_verified",
-                        "Value": "true"
-                    }
-                ],
-                MessageAction="SUPPRESS"
-            )
+            try:
+                cognito.admin_create_user(
+                    UserPoolId=user_pool_id,
+                    Username=email,
+                    UserAttributes=[
+                        {
+                            "Name": "email",
+                            "Value": email
+                        },
+                        {
+                            "Name": "given_name",
+                            "Value": first_name
+                        },
+                        {
+                            "Name": "family_name",
+                            "Value": last_name
+                        },
+                        {
+                            "Name": "email_verified",
+                            "Value": "true"
+                        }
+                    ],
+                    MessageAction="SUPPRESS"
+                )
 
-            cognito.admin_set_user_password(
-                UserPoolId=user_pool_id,
-                Username=email,
-                Password=password,
-                Permanent=True
-            )
+                cognito.admin_set_user_password(
+                    UserPoolId=user_pool_id,
+                    Username=email,
+                    Password=password,
+                    Permanent=True
+                )
+            except cognito.exceptions.NotAuthorizedException:
+                return {
+                    "statusCode": 400,
+                    "body": json.dumps({
+                        "message": "Invalid email or password"
+                    })
+                }
 
             return {
                 "statusCode": 200,
@@ -239,8 +241,6 @@ class ApiHandler(AbstractLambda):
             }
 
         except Exception as exc:
-            print(f"Signup error: {exc}")
-
             return {
                 "statusCode": 400,
                 "body": json.dumps({
