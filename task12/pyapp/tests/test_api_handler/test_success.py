@@ -1,7 +1,7 @@
 from pyapp.tests.test_api_handler import ApiHandlerLambdaTestCase
 
 import json
-from unittest.mock import MagicMock, patch
+from unittest.mock import Mock, MagicMock, patch
 
 import os
 
@@ -12,6 +12,80 @@ os.environ["USER_POOL_NAME"] = "simple-booking-userpool"
 
 
 class TestSuccess(ApiHandlerLambdaTestCase):
+
+    def test_get_tables(self):
+        with patch(
+            "lambdas.api_handler.handler.boto3.resource"
+        ) as mock_resource:
+
+            mock_table = MagicMock()
+
+            mock_table.scan.return_value = {
+                "Items": [
+                    {
+                        "id": 1,
+                        "number": 1,
+                        "places": 4,
+                        "isVip": False
+                    }
+                ]
+            }
+
+            mock_resource.return_value.Table.return_value = mock_table
+
+            response = self.HANDLER._get_tables()
+            print('=========== response ====================')
+            print(response)
+            body = json.loads(response["body"])
+            print('================ body ==============')
+            print(body)
+
+            {'statusCode': 200, 'body': '{"tables": [{"id": "1", "number": 1, "places": 4, "isVip": false}]}'}
+            {'tables': [{'id': '1', 'number': 1, 'places': 4, 'isVip': False}]}
+
+            self.assertEqual(response["statusCode"], 200)
+            self.assertEqual(len(body["tables"]), 1)
+            self.assertEqual(body["tables"][0]["id"], 1)
+            self.assertEqual(body["tables"][0]["number"], 1)
+
+
+    def test_create_table(self):
+        with patch(
+            "lambdas.api_handler.handler.boto3.resource"
+        ) as mock_resource:
+            
+            mock_table = MagicMock()
+            mock_resource.return_value.Table.return_value = mock_table
+
+            event = {
+                "resource": "/tables",
+                "httpMethod": "POST",
+                "body": {
+                    "id": 123,
+                    "number": 1,
+                    "places": 5,
+                    "isVip": False,
+                    "minOrder": 100
+                }
+            }
+
+            response = self.HANDLER._create_table(event)
+            body = json.loads(response["body"])
+
+            self.assertEqual(response["statusCode"], 200)
+            self.assertEqual(body["id"], 123)
+
+            mock_table.put_item.assert_called_once()
+
+            # Verify exactly what is written to DynamoDB
+            saved_item = mock_table.put_item.call_args.kwargs["Item"]
+
+            self.assertEqual(saved_item["id"], 123)
+            self.assertEqual(saved_item["number"], 1)
+            self.assertEqual(saved_item["places"], 5)
+            self.assertEqual(saved_item["isVip"], False)
+            self.assertEqual(saved_item["minOrder"], 100)
+
 
     def test_signin_success(self):
     
@@ -69,8 +143,6 @@ class TestSuccess(ApiHandlerLambdaTestCase):
             ):
                 response = self.HANDLER.handle_request(event, None)
 
-        print('RESPONSE:')
-        print(response)
         assert response["statusCode"] == 200
 
         body = json.loads(response["body"])
@@ -106,11 +178,6 @@ class TestSuccess(ApiHandlerLambdaTestCase):
                 "password": PASSWORD
             }
         }
-
-        # event = {
-        #     "email": "john@example.com",
-        #     "password": "Password123$"
-        # }
 
         cognito_mock = MagicMock()
 

@@ -58,12 +58,84 @@ class ApiHandler(AbstractLambda):
         if resource == "/signin" and method == "POST":
             return self._signin(event)
 
+        if resource == "/tables" and method == "GET":
+            return self._get_tables()
+
+        if resource == "/tables" and method == "POST":
+            return self._create_table(event)
+
+        if resource == "/reservations" and method == "GET":
+            return self._get_reservations(event)
+
+        if resource == "/reservations" and method == "POST":
+            return self._create_reservations(event)
+
         return {
             "statusCode": 400,
             "body": json.dumps({
                 "message": "Invalid request"
             })
         }
+
+    def _get_reservations(self, event):
+        pass
+
+    def _create_reservations(self, event):
+            pass
+
+    def _get_tables(self):
+        try:
+            table = get_tables_table()
+
+            response = table.scan()
+
+            return {
+                "statusCode": 200,
+                "body": json.dumps({
+                    "tables": response.get("Items", [])
+                })
+            }
+
+        except Exception as ex:
+            return {
+                "statusCode": 400,
+                "body": json.dumps({
+                    "message": str(ex)
+                })
+            }
+
+    def _create_table(self, event):
+        try:
+            body = event["body"]
+
+            item = {
+                "id": body["id"],
+                "number": body["number"],
+                "places": body["places"],
+                "isVip": body["isVip"]
+            }
+
+            if "minOrder" in body:
+                item["minOrder"] = body["minOrder"]
+
+            table = get_tables_table()
+
+            table.put_item(Item=item)
+
+            return {
+                "statusCode": 200,
+                "body": json.dumps({
+                    "id": body["id"]
+                })
+            }
+
+        except Exception as ex:
+            return {
+                "statusCode": 400,
+                "body": json.dumps({
+                    "message": str(ex)
+                })
+            }
 
 
     def _signin(self, event):
