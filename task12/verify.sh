@@ -125,7 +125,7 @@ fi
 echo
 echo "🔵 Getting access tokens (POST /signin)..."
 
-RESPONSE=$(curl -X POST \
+RESPONSE=$(curl -s -X POST \
   https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/signin \
   -H "Content-Type: application/json" \
   -d '{
