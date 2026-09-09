@@ -46,9 +46,8 @@ def is_valid_time(value):
         return False
 
 
-
 EMAIL_PATTERN = re.compile(
-    r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
+    r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
 )
 
 PASSWORD_PATTERN = re.compile(
@@ -419,7 +418,17 @@ class ApiHandler(AbstractLambda):
             email = body["email"]
             password = body["password"]
 
-            if not EMAIL_PATTERN.match(email):
+            if not isinstance(email, str):
+                return {
+                    "statusCode": 400,
+                    "body": json.dumps({
+                        "message": "Invalid email"
+                    })
+                }
+
+            email = email.strip()
+
+            if not EMAIL_PATTERN.fullmatch(email):
                 return {
                     "statusCode": 400,
                     "body": json.dumps({

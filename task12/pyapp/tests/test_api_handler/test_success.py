@@ -6,12 +6,44 @@ from unittest.mock import MagicMock, patch
 import os
 import uuid
 
+import pytest
+
 os.environ["TABLES_TABLE"] = "Tables"
 os.environ["RESERVATIONS_TABLE"] = "Reservations"
 os.environ["USER_POOL_NAME"] = "simple-booking-userpool"
 
 
 class TestSuccess(ApiHandlerLambdaTestCase):
+
+    @pytest.mark.parametrize("email", [
+        "",
+        "john",
+        "john@",
+        "@example.com",
+        "john@example",
+        "john@@example.com",
+        "john example.com"
+    ])
+    def test_signup_invalid_email(self):
+        event = {
+            "resource": "/signup",
+            "httpMethod": "POST",
+            "body": {
+                "firstName": "John",
+                "lastName": "Smith",
+                "email": "not-an-email",
+                "password": "Password123$"
+            }
+        }
+
+        response = self.HANDLER._signup(event)
+
+        assert response["statusCode"] == 400
+
+        body = json.loads(response["body"])
+
+        assert body["message"] == "Invalid email"
+        
 
     def test_get_table_not_found(self):
         event = {
