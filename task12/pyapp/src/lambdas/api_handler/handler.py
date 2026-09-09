@@ -225,9 +225,9 @@ class ApiHandler(AbstractLambda):
                 }
 
             tables = json.loads(self._get_tables()['body'])['tables']
-            table_ids = [table["id"] for table in tables]
+            table_numbers = [table["number"] for table in tables]
 
-            if body["tableNumber"] not in table_ids:
+            if body["tableNumber"] not in table_numbers:
                 return {
                     "statusCode": 400,
                     "body": json.dumps({
@@ -240,9 +240,11 @@ class ApiHandler(AbstractLambda):
             for reservation in reservations:
                 reservation_slot_start = datetime.strptime(reservation["slotTimeStart"], "%H:%M").time()
                 reservation_slot_end = datetime.strptime(reservation["slotTimeEnd"], "%H:%M").time()
-                reservation_date = datetime.strptime(body["date"], "%Y-%m-%d").date()
+
+                reservation_date = datetime.strptime(reservation["date"], "%Y-%m-%d").date()
+
                 if new_reservation_date == reservation_date:
-                    if max(reservation_slot_start, start_time) < max(reservation_slot_end, end_time):
+                    if max(reservation_slot_start, start_time) < min(reservation_slot_end, end_time):
                         return {
                             "statusCode": 400,
                             "body": json.dumps({
