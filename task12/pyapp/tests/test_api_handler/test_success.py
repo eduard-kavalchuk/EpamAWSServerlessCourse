@@ -379,9 +379,7 @@ class TestSuccess(ApiHandlerLambdaTestCase):
 
         body = json.loads(response["body"])
 
-        assert body["accessToken"] == "ACCESS_TOKEN"
         assert body["idToken"] == "ID_TOKEN"
-        assert body["refreshToken"] == "REFRESH_TOKEN"
 
         cognito_mock.list_user_pool_clients.assert_called_once_with(
             UserPoolId="eu-west-1_TEST_POOL",

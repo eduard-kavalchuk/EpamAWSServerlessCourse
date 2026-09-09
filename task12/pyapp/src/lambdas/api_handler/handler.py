@@ -386,9 +386,7 @@ class ApiHandler(AbstractLambda):
             return {
                 "statusCode": 200,
                 "body": json.dumps({
-                    "accessToken": tokens["AccessToken"],
                     "idToken": tokens["IdToken"],
-                    "refreshToken": tokens["RefreshToken"]
                 })
             }
         except KeyError as exc:

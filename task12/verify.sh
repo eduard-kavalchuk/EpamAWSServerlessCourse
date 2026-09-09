@@ -144,14 +144,8 @@ else
     exit 1
 fi
 
-ACCESS_TOKEN=$(echo "$RESPONSE" | jq -r '.body | fromjson | .accessToken')
-REFRESH_TOKEN=$(echo "$RESPONSE" | jq -r '.body | fromjson | .refreshToken')
 ID_TOKEN=$(echo "$RESPONSE" | jq -r '.body | fromjson | .idToken')
 
-echo
-echo ACCESS_TOKEN=${ACCESS_TOKEN}
-echo
-echo REFRESH_TOKEN=${REFRESH_TOKEN}
 echo
 echo ID_TOKEN=${ID_TOKEN}
 
