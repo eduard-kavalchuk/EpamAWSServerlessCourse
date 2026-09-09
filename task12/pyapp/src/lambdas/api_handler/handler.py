@@ -459,14 +459,6 @@ class ApiHandler(AbstractLambda):
                     })
                 }
 
-            # if not PASSWORD_PATTERN.fullmatch(password):
-            #     return {
-            #         "statusCode": 400,
-            #         "body": json.dumps({
-            #             "message": "Invalid password"
-            #         })
-            #     }
-
             user_pool_name = os.environ["USER_POOL_NAME"]
 
             cognito = boto3.client("cognito-idp")
