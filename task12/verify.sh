@@ -255,4 +255,4 @@ else
     exit 1
 fi
 
-echo "$RESPONSE" | jq -r '.body
+echo "$RESPONSE" | jq -r '.body'
