@@ -238,13 +238,28 @@ class ApiHandler(AbstractLambda):
             reservations = json.loads(self._get_reservations()['body'])["reservations"]
 
             for reservation in reservations:
-                reservation_slot_start = datetime.strptime(reservation["slotTimeStart"], "%H:%M").time()
-                reservation_slot_end = datetime.strptime(reservation["slotTimeEnd"], "%H:%M").time()
+                if reservation["tableNumber"] != body["tableNumber"]:
+                    continue
 
-                reservation_date = datetime.strptime(reservation["date"], "%Y-%m-%d").date()
+                reservation_slot_start = datetime.strptime(
+                    reservation["slotTimeStart"], 
+                    "%H:%M"
+                ).time()
+
+                reservation_slot_end = datetime.strptime(
+                    reservation["slotTimeEnd"], 
+                    "%H:%M"
+                ).time()
+
+                reservation_date = datetime.strptime(
+                    reservation["date"], 
+                    "%Y-%m-%d"
+                ).date()
 
                 if new_reservation_date == reservation_date:
-                    if max(reservation_slot_start, start_time) < min(reservation_slot_end, end_time):
+                    if (
+                        max(reservation_slot_start, start_time) < min(reservation_slot_end, end_time)
+                    ):
                         return {
                             "statusCode": 400,
                             "body": json.dumps({
