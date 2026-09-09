@@ -73,8 +73,9 @@ class TestSuccess(ApiHandlerLambdaTestCase):
         event = {
             "resource": "/tables/{tableId}",
             "httpMethod": "GET",
-            "tableId": "1",
-            "body": {}
+            "pathParameters": {
+                "tableId": "1"
+            }
         }
 
         mock_table = MagicMock()

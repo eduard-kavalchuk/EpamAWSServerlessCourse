@@ -104,7 +104,8 @@ class ApiHandler(AbstractLambda):
     def _get_table(self, event):
         try:
             print(json.dumps(event))
-            table_id = int(event["tableId"])
+            table_id = int(event["pathParameters"]["tableId"])
+            # table_id = int(event["tableId"])
 
             tables = get_tables_table()
 
