@@ -78,7 +78,7 @@
             "method.request.path.tableId": true
           },
           "integration_request_body_template": {
-            "application/json": "{ \"resource\": \"$context.resourcePath\", \"httpMethod\": \"$context.httpMethod\", \"body\": $input.json('$')}"
+            "application/json": "{ \"resource\": \"$context.resourcePath\", \"httpMethod\": \"$context.httpMethod\", \"tableId\": \"$input.params('tableId')\", \"body\": $input.json('$') }"
           },
           "responses": [],
           "integration_responses": [],

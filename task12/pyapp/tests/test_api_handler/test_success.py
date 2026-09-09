@@ -13,6 +13,66 @@ os.environ["USER_POOL_NAME"] = "simple-booking-userpool"
 
 class TestSuccess(ApiHandlerLambdaTestCase):
 
+    def test_get_table_not_found(self):
+        event = {
+            "resource": "/tables/{tableId}",
+            "httpMethod": "GET",
+            "tableId": "999",
+            "body": {}
+        }
+
+        mock_table = MagicMock()
+
+        mock_table.get_item.return_value = {}
+
+        with patch(
+            "lambdas.api_handler.handler.get_tables_table",
+            return_value=mock_table
+        ):
+            response = self.HANDLER._get_table(event)
+
+        assert response["statusCode"] == 400
+
+    def test_get_table_success(self):
+        event = {
+            "resource": "/tables/{tableId}",
+            "httpMethod": "GET",
+            "tableId": "1",
+            "body": {}
+        }
+
+        mock_table = MagicMock()
+
+        mock_table.get_item.return_value = {
+            "Item": {
+                "id": 1,
+                "number": 7,
+                "places": 4,
+                "isVip": False,
+                "minOrder": 100
+            }
+        }
+
+        with patch(
+            "lambdas.api_handler.handler.get_tables_table",
+            return_value=mock_table
+        ):
+            response = self.HANDLER._get_table(event)
+
+        assert response["statusCode"] == 200
+
+        body = json.loads(response["body"])
+
+        assert body["id"] == 1
+        assert body["number"] == 7
+        assert body["places"] == 4
+        assert body["isVip"] is False
+        assert body["minOrder"] == 100
+
+        mock_table.get_item.assert_called_once_with(
+            Key={"id": 1}
+        )
+
     def test_create_overlapping_reservation(self):
         event = {
             "resource": "/reservations",

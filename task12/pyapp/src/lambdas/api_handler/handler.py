@@ -92,12 +92,53 @@ class ApiHandler(AbstractLambda):
         if resource == "/reservations" and method == "POST":
             return self._create_reservation(event)
 
+        if resource == "/tables/{tableId}" and method == "GET":
+            return self._get_table(event)
+
         return {
             "statusCode": 400,
             "body": json.dumps({
                 "message": "Invalid request"
             })
         }
+
+    def _get_table(self, event):
+        try:
+            table_id = int(event["tableId"])
+
+            tables = get_tables_table()
+
+            response = tables.get_item(
+                Key={
+                    "id": table_id
+                }
+            )
+
+            item = response.get("Item")
+
+            if not item:
+                return {
+                    "statusCode": 400,
+                    "body": json.dumps({
+                        "message": "Table not found"
+                    })
+                }
+
+            return {
+                "statusCode": 200,
+                "body": json.dumps(
+                    item,
+                    default=decimal_default
+                )
+            }
+
+        except Exception as ex:
+            return {
+                "statusCode": 400,
+                "body": json.dumps({
+                    "message": str(ex)
+                })
+            }
 
     def _get_reservations(self):
         try:

@@ -172,6 +172,7 @@ RESPONSE=$(curl -s -X POST \
 
 echo ${RESPONSE}
 STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+CREATED_TABLE_ID=$(echo "$RESPONSE" | jq -r '.body | fromjson | .id')
 
 if [ "$STATUS_CODE" -eq 200 ]; then
     echo "✅ Success"
@@ -239,3 +240,19 @@ fi
 
 echo "$RESPONSE" | jq -r '.body | fromjson | .reservations'
 
+
+echo
+echo "🔵 Fetching table data for table with ID=${CREATED_TABLE_ID}..."
+
+RESPONSE=$(curl -s https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables/${CREATED_TABLE_ID})
+
+STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+
+if [ "$STATUS_CODE" -eq 200 ]; then
+    echo "✅ Success"
+else
+    echo "❌ Failed to fetch table data"
+    exit 1
+fi
+
+echo "$RESPONSE" | jq -r '.body
