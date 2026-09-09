@@ -62,7 +62,7 @@ else
 fi
 
 TABLE_TABLES=$(aws dynamodb list-tables \
-    --query 'TableNames[?contains(@, `Reservations`)]' \
+    --query 'TableNames[?contains(@, `Tables`)]' \
     --output text 2>/dev/null)
 
 if [ -z "$TABLE_TABLES" ]; then
@@ -198,109 +198,44 @@ fi
 echo "$RESPONSE" | jq -r '.body | fromjson | .tables'
 
 
+echo
+echo "🔵 Creating a reservation..."
+
+RESPONSE=$(curl -s -X POST \
+  https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/reservations \
+  -H "Content-Type: application/json" \
+  -d '{
+        "tableNumber": '"${TABLE_ID}"',
+        "clientName": "John Smith",
+        "phoneNumber": "+375291112233",
+        "date": "2026-09-10",
+        "slotTimeStart": "13:00",
+        "slotTimeEnd": "15:00"
+      }')
+
+STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+
+if [ "$STATUS_CODE" -eq 200 ]; then
+    echo "✅ Success"
+else
+    echo "❌ Failed to fetch reservations"
+    exit 1
+fi
 
 
+echo
+echo "🔵 Fetching all reservations..."
 
-# echo "🔵 Checking POST /signup..."
-# RESPONSE=$(curl -s -X POST https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/signup)
+RESPONSE=$(curl -s https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/reservations)
 
-# echo "Response: $RESPONSE"
+STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
 
-# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+if [ "$STATUS_CODE" -eq 200 ]; then
+    echo "✅ Success"
+else
+    echo "❌ Failed to fetch reservations"
+    exit 1
+fi
 
-# if [ "$STATUS_CODE" -ne 200 ]; then
-#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
-#     exit 1
-# else
-#     echo "✅ Success: statusCode is 200"
-# fi
-
-
-# echo "🔵 Checking POST /signin..."
-# RESPONSE=$(curl -s -X POST https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/signin)
-
-# echo "Response: $RESPONSE"
-
-# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
-
-# if [ "$STATUS_CODE" -ne 200 ]; then
-#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
-#     exit 1
-# else
-#     echo "✅ Success: statusCode is 200"
-# fi
-
-# echo "🔵 Checking POST /tables..."
-# RESPONSE=$(curl -s -X POST https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables)
-
-# echo "Response: $RESPONSE"
-
-# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
-
-# if [ "$STATUS_CODE" -ne 200 ]; then
-#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
-#     exit 1
-# else
-#     echo "✅ Success: statusCode is 200"
-# fi
-
-
-# echo "🔵 Checking GET /tables..."
-# RESPONSE=$(curl -s https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables)
-
-# echo "Response: $RESPONSE"
-
-# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
-
-# if [ "$STATUS_CODE" -ne 200 ]; then
-#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
-#     exit 1
-# else
-#     echo "✅ Success: statusCode is 200"
-# fi
-
-
-# echo "🔵 Checking POST /reservation..."
-# RESPONSE=$(curl -s -X POST https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/reservation)
-
-# echo "Response: $RESPONSE"
-
-# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
-
-# if [ "$STATUS_CODE" -ne 200 ]; then
-#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
-#     exit 1
-# else
-#     echo "✅ Success: statusCode is 200"
-# fi
-
-
-# echo "🔵 Checking GET /reservation..."
-# RESPONSE=$(curl -s https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/reservation)
-
-# echo "Response: $RESPONSE"
-
-# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
-
-# if [ "$STATUS_CODE" -ne 200 ]; then
-#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
-#     exit 1
-# else
-#     echo "✅ Success: statusCode is 200"
-# fi
-
-
-# echo "🔵 Checking GET /tables/{tableId} with a random tableId..."
-# RESPONSE=$(curl -s https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables/123)
-
-# echo "Response: $RESPONSE"
-
-# STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
-
-# if [ "$STATUS_CODE" -ne 200 ]; then
-#     echo "❌ Error: Expected statusCode 200, but got $STATUS_CODE"
-#     exit 1
-# else
-#     echo "✅ Success: statusCode is 200"
-# fi
+echo "$RESPONSE" | jq -r '.body | fromjson | .reservations'
 

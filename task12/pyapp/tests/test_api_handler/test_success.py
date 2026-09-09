@@ -5,8 +5,6 @@ from unittest.mock import MagicMock, patch
 
 import os
 import uuid
-from datetime import datetime, date
-
 
 os.environ["TABLES_TABLE"] = "Tables"
 os.environ["RESERVATIONS_TABLE"] = "Reservations"
@@ -14,6 +12,68 @@ os.environ["USER_POOL_NAME"] = "simple-booking-userpool"
 
 
 class TestSuccess(ApiHandlerLambdaTestCase):
+
+    def test_create_overlapping_reservation(self):
+        event = {
+            "resource": "/reservations",
+            "httpMethod": "POST",
+            "body": {
+                "tableNumber": 1,
+                "clientName": "John Smith",
+                "phoneNumber": "+375291112233",
+                "date": "2026-09-09",
+                "slotTimeStart": "13:00",
+                "slotTimeEnd": "15:00"
+            }
+        }
+
+        tables_table_mock = MagicMock()
+        reservations_table_mock = MagicMock()
+
+        tables_table_mock.scan.return_value = {
+            "Items": [
+                {
+                    "id": 1,
+                    "number": 1,
+                    "places": 4,
+                    "isVip": False
+                }
+            ]
+        }
+
+        reservations_table_mock.scan.side_effect = [
+            {
+                "Items": []
+            },
+            {
+                "Items": [
+                    {
+                        "id": "1111",
+                        "tableNumber": 1,
+                        "clientName": "John Smith",
+                        "phoneNumber": "+375291112233",
+                        "date": "2026-09-09",
+                        "slotTimeStart": "13:00",
+                        "slotTimeEnd": "15:00"
+                    }
+                ]
+            }
+        ]
+
+        with patch(
+            "lambdas.api_handler.handler.get_tables_table",
+            return_value=tables_table_mock
+        ), patch(
+            "lambdas.api_handler.handler.get_reservations_table",
+            return_value=reservations_table_mock
+        ):
+
+            response1 = self.HANDLER._create_reservation(event)
+            response2 = self.HANDLER._create_reservation(event)
+
+        assert response1["statusCode"] == 200
+        assert response2["statusCode"] == 400
+
 
     def test_create_reservation_success(self):
         event = {
@@ -63,8 +123,6 @@ class TestSuccess(ApiHandlerLambdaTestCase):
             "11111111-2222-3333-4444-555555555555"
 
         reservations_table_mock.put_item.assert_called_once()
-
-        
 
 
     def test_get_reservations(self):

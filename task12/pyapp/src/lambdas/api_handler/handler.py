@@ -138,9 +138,6 @@ class ApiHandler(AbstractLambda):
         try:
             body = event["body"]
 
-            print('============ body inside _create_reservation ==================')
-            print(body)
-
             if not is_valid_date(body["date"]):
                 return {
                     "statusCode": 400,
@@ -148,8 +145,6 @@ class ApiHandler(AbstractLambda):
                         "message": "Invalid date"
                     })
                 }
-
-            print('============ _create_reservation: date validation passed ==================')
 
             new_reservation_date = datetime.strptime(body["date"], "%Y-%m-%d").date()
 
@@ -161,8 +156,6 @@ class ApiHandler(AbstractLambda):
                     })
                 }
 
-            print('============ _create_reservation: reservation date validation passed ==================')
-
             if not is_valid_time(body["slotTimeStart"]):
                 return {
                     "statusCode": 400,
@@ -171,8 +164,6 @@ class ApiHandler(AbstractLambda):
                     })
                 }
 
-            print('============ _create_reservation: slotTimeStart validation passed ==================')
-
             if not is_valid_time(body["slotTimeEnd"]):
                 return {
                     "statusCode": 400,
@@ -180,8 +171,6 @@ class ApiHandler(AbstractLambda):
                         "message": "Invalid slotTimeEnd"
                     })
                 }
-
-            print('============ _create_reservation: slotTimeEnd validation passed ==================')
 
             start_time = datetime.strptime(body["slotTimeStart"], "%H:%M").time()
             end_time = datetime.strptime(body["slotTimeEnd"], "%H:%M").time()
@@ -192,8 +181,6 @@ class ApiHandler(AbstractLambda):
                         "message": "Invalid slotTimeEnd"
                     })
                 }
-
-            print('============ _create_reservation: start and end times validation passed ==================')
 
             tables = json.loads(self._get_tables()['body'])['tables']
             table_ids = [table["id"] for table in tables]
@@ -206,30 +193,20 @@ class ApiHandler(AbstractLambda):
                     })
                 }
 
-            print('============ _create_reservation: table number validation passed ==================')
-
-            # reservations = self._get_reservations()["reservations"]
-
             reservations = json.loads(self._get_reservations()['body'])["reservations"]
-            print("RESERVATIONS:", reservations)
 
             for reservation in reservations:
                 reservation_slot_start = datetime.strptime(reservation["slotTimeStart"], "%H:%M").time()
                 reservation_slot_end = datetime.strptime(reservation["slotTimeEnd"], "%H:%M").time()
                 reservation_date = datetime.strptime(body["date"], "%Y-%m-%d").date()
                 if new_reservation_date == reservation_date:
-                    if ((reservation_slot_start < start_time < reservation_slot_end)
-                        or
-                        (reservation_slot_start < end_time < reservation_slot_end)):
+                    if max(reservation_slot_start, start_time) < max(reservation_slot_end, end_time):
                         return {
                             "statusCode": 400,
                             "body": json.dumps({
                                 "message": "Conflicting reservations"
                             })
                         }
-                                
-
-            print('============ _create_reservation: all validations passed ==================')
 
             reservationId = str(uuid.uuid4())
 
@@ -243,14 +220,8 @@ class ApiHandler(AbstractLambda):
                 "slotTimeEnd": body["slotTimeEnd"],
             }
 
-            print('============ _create_reservation: start getting tables ==================')
             table = get_reservations_table()
-
-            print('============ _create_reservation: finished getting tables ==================')
-
             table.put_item(Item=item)
-
-            print('============ _create_reservation: successfully put item ==================')
 
             return {
                 "statusCode": 200,
