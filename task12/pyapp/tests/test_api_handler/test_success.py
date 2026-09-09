@@ -22,7 +22,11 @@ class TestSuccess(ApiHandlerLambdaTestCase):
         "@example.com",
         "john@example",
         "john@@example.com",
-        "john example.com"
+        "john example.com",
+        "john@example..com",
+        ".john@example.com",
+        "john.@example.com",
+        "john..smith@example.com"
     ])
     def test_signup_invalid_email(self):
         event = {
