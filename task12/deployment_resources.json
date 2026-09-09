@@ -77,9 +77,6 @@
           "method_request_parameters": {
             "method.request.path.tableId": true
           },
-          "integration_request_body_template": {
-            "application/json": "{ \"resource\": \"$context.resourcePath\", \"httpMethod\": \"$context.httpMethod\", \"tableId\": \"$input.params('tableId')\", \"body\": $input.json('$') }"
-          },
           "responses": [],
           "integration_responses": [],
           "default_error_pattern": true,
@@ -100,9 +97,6 @@
           "lambda_name": "api_handler",
           "api_key_required": false,
           "method_request_parameters": {},
-          "integration_request_body_template": {
-            "application/json": "{ \"resource\": \"$context.resourcePath\", \"httpMethod\": \"$context.httpMethod\", \"body\": $input.json('$')}"
-          },
           "responses": [],
           "integration_responses": [],
           "default_error_pattern": true,
@@ -123,9 +117,6 @@
           "lambda_name": "api_handler",
           "api_key_required": false,
           "method_request_parameters": {},
-          "integration_request_body_template": {
-            "application/json": "{ \"resource\": \"$context.resourcePath\", \"httpMethod\": \"$context.httpMethod\", \"body\": $input.json('$')}"
-          },
           "responses": [],
           "integration_responses": [],
           "default_error_pattern": true,
@@ -146,9 +137,6 @@
           "lambda_name": "api_handler",
           "api_key_required": false,
           "method_request_parameters": {},
-          "integration_request_body_template": {
-            "application/json": "{ \"resource\": \"$context.resourcePath\", \"httpMethod\": \"$context.httpMethod\", \"body\": $input.json('$')}"
-          },
           "responses": [],
           "integration_responses": [],
           "default_error_pattern": true,
@@ -161,9 +149,6 @@
           "lambda_name": "api_handler",
           "api_key_required": false,
           "method_request_parameters": {},
-          "integration_request_body_template": {
-            "application/json": "{ \"resource\": \"$context.resourcePath\", \"httpMethod\": \"$context.httpMethod\", \"body\": $input.json('$')}"
-          },
           "responses": [],
           "integration_responses": [],
           "default_error_pattern": true,
@@ -184,9 +169,6 @@
           "lambda_name": "api_handler",
           "api_key_required": false,
           "method_request_parameters": {},
-          "integration_request_body_template": {
-            "application/json": "{ \"resource\": \"$context.resourcePath\", \"httpMethod\": \"$context.httpMethod\", \"body\": $input.json('$')}"
-          },
           "responses": [],
           "integration_responses": [],
           "default_error_pattern": true,
@@ -199,9 +181,6 @@
           "lambda_name": "api_handler",
           "api_key_required": false,
           "method_request_parameters": {},
-          "integration_request_body_template": {
-            "application/json": "{ \"resource\": \"$context.resourcePath\", \"httpMethod\": \"$context.httpMethod\", \"body\": $input.json('$')}"
-          },
           "responses": [],
           "integration_responses": [],
           "default_error_pattern": true,
