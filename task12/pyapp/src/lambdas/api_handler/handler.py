@@ -9,6 +9,8 @@ from datetime import datetime, timezone
 from commons.log_helper import get_logger
 from commons.abstract_lambda import AbstractLambda
 
+from decimal import Decimal
+
 _LOG = get_logger(__name__)
 
 def get_tables_table():
@@ -19,9 +21,13 @@ def get_reservations_table():
     dynamodb = boto3.resource("dynamodb")
     return dynamodb.Table(os.environ["RESERVATIONS_TABLE"])
 
-
 def get_pool_name():
     return os.environ["USER_POOL_NAME"]
+
+def decimal_default(obj):
+    if isinstance(obj, Decimal):
+        return int(obj)
+    raise TypeError
 
 
 EMAIL_PATTERN = re.compile(
@@ -91,9 +97,12 @@ class ApiHandler(AbstractLambda):
 
             return {
                 "statusCode": 200,
-                "body": json.dumps({
-                    "tables": response.get("Items", [])
-                })
+                "body": json.dumps(
+                    {
+                        "tables": response.get("Items", [])
+                    },
+                    default=decimal_default
+                )
             }
 
         except Exception as ex:

@@ -3,6 +3,7 @@ FIRST_NAME="John"
 LAST_NAME="Smith"
 EMAIL="john@example.com"
 PASSWORD="Password123$"
+TABLE_ID=1
 
 echo
 echo "🔵 Checking if lambda function api_handler exists..."
@@ -133,6 +134,7 @@ RESPONSE=$(curl -s -X POST \
         "password": "'"${PASSWORD}"'"
       }')
 
+echo ${RESPONSE}
 STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
 
 if [ "$STATUS_CODE" -eq 200 ]; then
@@ -152,6 +154,50 @@ echo
 echo REFRESH_TOKEN=${REFRESH_TOKEN}
 echo
 echo ID_TOKEN=${ID_TOKEN}
+
+
+echo
+echo "🔵 Creating a table..."
+
+RESPONSE=$(curl -s -X POST \
+  https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables \
+  -H "Content-Type: application/json" \
+  -d '{
+        "id": '"${TABLE_ID}"',
+        "number": 7,
+        "places": 4,
+        "isVip": false,
+        "minOrder": 100
+      }')
+
+echo ${RESPONSE}
+STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+
+if [ "$STATUS_CODE" -eq 200 ]; then
+    echo "✅ Success"
+else
+    echo "❌ Failed to create table"
+    exit 1
+fi
+
+
+echo
+echo "🔵 Fetching all tables..."
+
+RESPONSE=$(curl -s https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables)
+
+STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+
+if [ "$STATUS_CODE" -eq 200 ]; then
+    echo "✅ Success"
+else
+    echo "❌ Failed to fetch tables"
+    exit 1
+fi
+
+echo "$RESPONSE" | jq -r '.body | fromjson | .tables'
+
+
 
 
 

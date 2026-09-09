@@ -1,7 +1,7 @@
 from pyapp.tests.test_api_handler import ApiHandlerLambdaTestCase
 
 import json
-from unittest.mock import Mock, MagicMock, patch
+from unittest.mock import MagicMock, patch
 
 import os
 
