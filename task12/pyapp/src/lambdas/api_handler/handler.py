@@ -4,7 +4,7 @@ import boto3
 import os
 import re
 
-from datetime import datetime, timezone
+from datetime import datetime, date
 
 from commons.log_helper import get_logger
 from commons.abstract_lambda import AbstractLambda
@@ -30,6 +30,23 @@ def decimal_default(obj):
     raise TypeError
 
 
+def is_valid_date(value):
+    try:
+        datetime.strptime(value, "%Y-%m-%d")
+        return True
+    except ValueError:
+        return False
+
+
+def is_valid_time(value):
+    try:
+        datetime.strptime(value, "%H:%M")
+        return True
+    except ValueError:
+        return False
+
+
+
 EMAIL_PATTERN = re.compile(
     r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
 )
@@ -43,10 +60,9 @@ class ApiHandler(AbstractLambda):
 
     def validate_request(self, event) -> dict:
         pass
+
         
     def handle_request(self, event, context):
-        print("RAW EVENT:", event)
-
         if not isinstance(event, dict):
             return {
                 "statusCode": 400,
@@ -71,10 +87,10 @@ class ApiHandler(AbstractLambda):
             return self._create_table(event)
 
         if resource == "/reservations" and method == "GET":
-            return self._get_reservations(event)
+            return self._get_reservations()
 
         if resource == "/reservations" and method == "POST":
-            return self._create_reservations(event)
+            return self._create_reservation(event)
 
         return {
             "statusCode": 400,
@@ -83,17 +99,177 @@ class ApiHandler(AbstractLambda):
             })
         }
 
-    def _get_reservations(self, event):
-        pass
+    def _get_reservations(self):
+        try:
+            response = get_reservations_table().scan()
+            items = response["Items"]
 
-    def _create_reservations(self, event):
-            pass
+            reservations = []
+
+            for item in items:
+                reservations.append({
+                    "tableNumber": item["tableNumber"],
+                    "clientName": item["clientName"],
+                    "phoneNumber": item["phoneNumber"],
+                    "date": item["date"],
+                    "slotTimeStart": item["slotTimeStart"],
+                    "slotTimeEnd": item["slotTimeEnd"]
+                })
+
+            return {
+                "statusCode": 200,
+                "body": json.dumps(
+                    {
+                        "reservations": reservations
+                    },
+                    default=decimal_default
+                )
+            }
+
+        except Exception as ex:
+            return {
+                "statusCode": 400,
+                "body": json.dumps({
+                    "message": str(ex)
+                })
+            }
+
+    def _create_reservation(self, event):
+        try:
+            body = event["body"]
+
+            print('============ body inside _create_reservation ==================')
+            print(body)
+
+            if not is_valid_date(body["date"]):
+                return {
+                    "statusCode": 400,
+                    "body": json.dumps({
+                        "message": "Invalid date"
+                    })
+                }
+
+            print('============ _create_reservation: date validation passed ==================')
+
+            new_reservation_date = datetime.strptime(body["date"], "%Y-%m-%d").date()
+
+            if new_reservation_date < date.today():
+                return {
+                    "statusCode": 400,
+                    "body": json.dumps({
+                        "message": "Invalid date"
+                    })
+                }
+
+            print('============ _create_reservation: reservation date validation passed ==================')
+
+            if not is_valid_time(body["slotTimeStart"]):
+                return {
+                    "statusCode": 400,
+                    "body": json.dumps({
+                        "message": "Invalid slotTimeStart"
+                    })
+                }
+
+            print('============ _create_reservation: slotTimeStart validation passed ==================')
+
+            if not is_valid_time(body["slotTimeEnd"]):
+                return {
+                    "statusCode": 400,
+                    "body": json.dumps({
+                        "message": "Invalid slotTimeEnd"
+                    })
+                }
+
+            print('============ _create_reservation: slotTimeEnd validation passed ==================')
+
+            start_time = datetime.strptime(body["slotTimeStart"], "%H:%M").time()
+            end_time = datetime.strptime(body["slotTimeEnd"], "%H:%M").time()
+            if start_time > end_time:
+                return {
+                    "statusCode": 400,
+                    "body": json.dumps({
+                        "message": "Invalid slotTimeEnd"
+                    })
+                }
+
+            print('============ _create_reservation: start and end times validation passed ==================')
+
+            tables = json.loads(self._get_tables()['body'])['tables']
+            table_ids = [table["id"] for table in tables]
+
+            if body["tableNumber"] not in table_ids:
+                return {
+                    "statusCode": 400,
+                    "body": json.dumps({
+                        "message": "Invalid tableNumber"
+                    })
+                }
+
+            print('============ _create_reservation: table number validation passed ==================')
+
+            # reservations = self._get_reservations()["reservations"]
+
+            reservations = json.loads(self._get_reservations()['body'])["reservations"]
+            print("RESERVATIONS:", reservations)
+
+            for reservation in reservations:
+                reservation_slot_start = datetime.strptime(reservation["slotTimeStart"], "%H:%M").time()
+                reservation_slot_end = datetime.strptime(reservation["slotTimeEnd"], "%H:%M").time()
+                reservation_date = datetime.strptime(body["date"], "%Y-%m-%d").date()
+                if new_reservation_date == reservation_date:
+                    if ((reservation_slot_start < start_time < reservation_slot_end)
+                        or
+                        (reservation_slot_start < end_time < reservation_slot_end)):
+                        return {
+                            "statusCode": 400,
+                            "body": json.dumps({
+                                "message": "Conflicting reservations"
+                            })
+                        }
+                                
+
+            print('============ _create_reservation: all validations passed ==================')
+
+            reservationId = str(uuid.uuid4())
+
+            item = {
+                "id": reservationId,
+                "tableNumber": body["tableNumber"],
+                "clientName": body["clientName"],
+                "phoneNumber": body["phoneNumber"],
+                "date": body["date"],
+                "slotTimeStart": body["slotTimeStart"],
+                "slotTimeEnd": body["slotTimeEnd"],
+            }
+
+            print('============ _create_reservation: start getting tables ==================')
+            table = get_reservations_table()
+
+            print('============ _create_reservation: finished getting tables ==================')
+
+            table.put_item(Item=item)
+
+            print('============ _create_reservation: successfully put item ==================')
+
+            return {
+                "statusCode": 200,
+                "body": json.dumps({
+                    "reservationId": reservationId
+                })
+            }
+
+        except Exception as ex:
+            return {
+                "statusCode": 400,
+                "body": json.dumps({
+                    "message": str(ex)
+                })
+            }
 
     def _get_tables(self):
         try:
-            table = get_tables_table()
-
-            response = table.scan()
+            response = get_tables_table().scan()
 
             return {
                 "statusCode": 200,
@@ -224,8 +400,6 @@ class ApiHandler(AbstractLambda):
     
     def _signup(self, event):
         try:
-            print("EVENT:")
-            print(event)
             body = event["body"]
 
             first_name = body["firstName"]

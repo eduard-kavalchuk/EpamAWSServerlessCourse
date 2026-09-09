@@ -4,6 +4,8 @@ import json
 from unittest.mock import MagicMock, patch
 
 import os
+import uuid
+from datetime import datetime, date
 
 
 os.environ["TABLES_TABLE"] = "Tables"
@@ -12,6 +14,89 @@ os.environ["USER_POOL_NAME"] = "simple-booking-userpool"
 
 
 class TestSuccess(ApiHandlerLambdaTestCase):
+
+    def test_create_reservation_success(self):
+        event = {
+            "resource": "/reservations",
+            "httpMethod": "POST",
+            "body": {
+                "tableNumber": 1,
+                "clientName": "John Smith",
+                "phoneNumber": "+375291112233",
+                "date": "2026-09-09",
+                "slotTimeStart": "13:00",
+                "slotTimeEnd": "15:00"
+            }
+        }
+
+        tables_table_mock = MagicMock()
+        reservations_table_mock = MagicMock()
+
+        tables_table_mock.scan.return_value = {
+            "Items": [
+                {
+                    "id": 1,
+                    "number": 1,
+                    "places": 4,
+                    "isVip": False
+                }
+            ]
+        }
+
+        with patch(
+            "lambdas.api_handler.handler.get_tables_table",
+            return_value=tables_table_mock
+        ), patch(
+            "lambdas.api_handler.handler.get_reservations_table",
+            return_value=reservations_table_mock
+        ), patch(
+            "lambdas.api_handler.handler.uuid.uuid4",
+            return_value="11111111-2222-3333-4444-555555555555"
+        ):
+            response = self.HANDLER._create_reservation(event)
+
+        assert response["statusCode"] == 200
+
+        body = json.loads(response["body"])
+
+        assert body["reservationId"] == \
+            "11111111-2222-3333-4444-555555555555"
+
+        reservations_table_mock.put_item.assert_called_once()
+
+        
+
+
+    def test_get_reservations(self):
+        with patch(
+            "lambdas.api_handler.handler.boto3.resource"
+        ) as mock_resource:
+
+            mock_table = MagicMock()
+
+            mock_table.scan.return_value = {
+                "Items": [
+                    {
+                        "id": str(uuid.uuid4()),
+                        "tableNumber": 1,
+                        "clientName": "Client name",
+                        "phoneNumber": "123-45-67",
+                        "date": "2026-09-10",
+                        "slotTimeStart": "09:30",
+                        "slotTimeEnd": "17:45",
+                    }
+                ]
+            }
+
+            mock_resource.return_value.Table.return_value = mock_table
+
+            response = self.HANDLER._get_reservations()
+            body = json.loads(response["body"])
+
+            self.assertEqual(response["statusCode"], 200)
+            self.assertEqual(len(body["reservations"]), 1)
+            self.assertEqual(body["reservations"][0]["tableNumber"], 1)
+
 
     def test_get_tables(self):
         with patch(
@@ -34,14 +119,7 @@ class TestSuccess(ApiHandlerLambdaTestCase):
             mock_resource.return_value.Table.return_value = mock_table
 
             response = self.HANDLER._get_tables()
-            print('=========== response ====================')
-            print(response)
             body = json.loads(response["body"])
-            print('================ body ==============')
-            print(body)
-
-            {'statusCode': 200, 'body': '{"tables": [{"id": "1", "number": 1, "places": 4, "isVip": false}]}'}
-            {'tables': [{'id': '1', 'number': 1, 'places': 4, 'isVip': False}]}
 
             self.assertEqual(response["statusCode"], 200)
             self.assertEqual(len(body["tables"]), 1)
