@@ -83,7 +83,8 @@
           "responses": [],
           "integration_responses": [],
           "default_error_pattern": true,
-          "authorization_scopes": []
+          "authorization_scopes": [],
+          "enable_proxy": true
         }
       },
       "/signup": {
@@ -105,7 +106,8 @@
           "responses": [],
           "integration_responses": [],
           "default_error_pattern": true,
-          "authorization_scopes": []
+          "authorization_scopes": [],
+          "enable_proxy": true
         }
       },
       "/signin": {
@@ -127,7 +129,8 @@
           "responses": [],
           "integration_responses": [],
           "default_error_pattern": true,
-          "authorization_scopes": []
+          "authorization_scopes": [],
+          "enable_proxy": true
         }
       },
       "/tables": {
@@ -149,7 +152,8 @@
           "responses": [],
           "integration_responses": [],
           "default_error_pattern": true,
-          "authorization_scopes": []
+          "authorization_scopes": [],
+          "enable_proxy": true
         },
         "GET": {
           "authorization_type": "NONE",
@@ -163,7 +167,8 @@
           "responses": [],
           "integration_responses": [],
           "default_error_pattern": true,
-          "authorization_scopes": []
+          "authorization_scopes": [],
+          "enable_proxy": true
         }
       },
       "/reservations": {
@@ -185,7 +190,8 @@
           "responses": [],
           "integration_responses": [],
           "default_error_pattern": true,
-          "authorization_scopes": []
+          "authorization_scopes": [],
+          "enable_proxy": true
         },
         "GET": {
           "authorization_type": "NONE",
@@ -199,7 +205,8 @@
           "responses": [],
           "integration_responses": [],
           "default_error_pattern": true,
-          "authorization_scopes": []
+          "authorization_scopes": [],
+          "enable_proxy": true
         }
       }
     },

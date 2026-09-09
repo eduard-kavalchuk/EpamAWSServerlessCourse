@@ -32,12 +32,12 @@ class TestSuccess(ApiHandlerLambdaTestCase):
         event = {
             "resource": "/signup",
             "httpMethod": "POST",
-            "body": {
+            "body": json.dumps({
                 "firstName": "John",
                 "lastName": "Smith",
                 "email": "not-an-email",
                 "password": "Password123$"
-            }
+            })
         }
 
         response = self.HANDLER._signup(event)
@@ -113,14 +113,14 @@ class TestSuccess(ApiHandlerLambdaTestCase):
         event = {
             "resource": "/reservations",
             "httpMethod": "POST",
-            "body": {
+            "body": json.dumps({
                 "tableNumber": 1,
                 "clientName": "John Smith",
                 "phoneNumber": "+375291112233",
                 "date": "2026-09-09",
                 "slotTimeStart": "13:00",
                 "slotTimeEnd": "15:00"
-            }
+            })
         }
 
         tables_table_mock = MagicMock()
@@ -175,14 +175,14 @@ class TestSuccess(ApiHandlerLambdaTestCase):
         event = {
             "resource": "/reservations",
             "httpMethod": "POST",
-            "body": {
+            "body": json.dumps({
                 "tableNumber": 1,
                 "clientName": "John Smith",
                 "phoneNumber": "+375291112233",
                 "date": "2026-09-09",
                 "slotTimeStart": "13:00",
                 "slotTimeEnd": "15:00"
-            }
+            })
         }
 
         tables_table_mock = MagicMock()
@@ -292,13 +292,13 @@ class TestSuccess(ApiHandlerLambdaTestCase):
             event = {
                 "resource": "/tables",
                 "httpMethod": "POST",
-                "body": {
+                "body": json.dumps({
                     "id": 123,
                     "number": 1,
                     "places": 5,
                     "isVip": False,
                     "minOrder": 100
-                }
+                })
             }
 
             response = self.HANDLER._create_table(event)
@@ -327,10 +327,10 @@ class TestSuccess(ApiHandlerLambdaTestCase):
         event = {
             "resource": "/signin",
             "httpMethod": "POST",
-            "body": {
+            "body": json.dumps({
                 "email": EMAIL,
                 "password": PASSWORD
-            }
+            })
         }
 
         cognito_mock = MagicMock()
@@ -403,10 +403,10 @@ class TestSuccess(ApiHandlerLambdaTestCase):
         event = {
             "resource": "/signin",
             "httpMethod": "POST",
-            "body": {
+            "body": json.dumps({
                 "email": EMAIL,
                 "password": PASSWORD
-            }
+            })
         }
 
         cognito_mock = MagicMock()
@@ -451,12 +451,12 @@ class TestSuccess(ApiHandlerLambdaTestCase):
         event = {
             "resource": "/signup",
             "httpMethod": "POST",
-            "body": {
+            "body": json.dumps({
                 "firstName": "First name",
                 "lastName": "Last name",
                 "email": EMAIL,
                 "password": PASSWORD
-            }
+            })
         }
 
         cognito_mock = MagicMock()

@@ -51,9 +51,8 @@ EMAIL_PATTERN = re.compile(
 )
 
 PASSWORD_PATTERN = re.compile(
-    r"^[A-Za-z0-9$%^*\-_]{12,}$"
+    r"^(?=.*[A-Za-z])(?=.*\d)(?=.*[$%^*])[A-Za-z\d$%^*]{12,}$"
 )
-
 
 class ApiHandler(AbstractLambda):
 
@@ -62,6 +61,7 @@ class ApiHandler(AbstractLambda):
 
         
     def handle_request(self, event, context):
+        print(json.dumps(event))
         if not isinstance(event, dict):
             return {
                 "statusCode": 400,
@@ -103,6 +103,7 @@ class ApiHandler(AbstractLambda):
 
     def _get_table(self, event):
         try:
+            print(json.dumps(event))
             table_id = int(event["tableId"])
 
             tables = get_tables_table()
@@ -176,7 +177,7 @@ class ApiHandler(AbstractLambda):
 
     def _create_reservation(self, event):
         try:
-            body = event["body"]
+            body = json.loads(event["body"])
 
             if not is_valid_date(body["date"]):
                 return {
@@ -302,7 +303,7 @@ class ApiHandler(AbstractLambda):
 
     def _create_table(self, event):
         try:
-            body = event["body"]
+            body = json.loads(event["body"])
 
             item = {
                 "id": body["id"],
@@ -336,7 +337,7 @@ class ApiHandler(AbstractLambda):
 
     def _signin(self, event):
         try:
-            body = event["body"]
+            body = json.loads(event["body"])
 
             email = body["email"]
             password = body["password"]
@@ -409,7 +410,7 @@ class ApiHandler(AbstractLambda):
     
     def _signup(self, event):
         try:
-            body = event["body"]
+            body = json.loads(event["body"])
 
             first_name = body["firstName"]
             last_name = body["lastName"]
@@ -458,7 +459,7 @@ class ApiHandler(AbstractLambda):
                     })
                 }
 
-            if not PASSWORD_PATTERN.match(password):
+            if not PASSWORD_PATTERN.fullmatch(password):
                 return {
                     "statusCode": 400,
                     "body": json.dumps({

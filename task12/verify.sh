@@ -2,7 +2,7 @@ REGION="eu-west-1"
 FIRST_NAME="John"
 LAST_NAME="Smith"
 EMAIL="john@example.com"
-PASSWORD="Password123$"
+PASSWORD="Password1234$"
 TABLE_ID=1
 
 echo
@@ -90,7 +90,7 @@ echo "✅ COGNITO_USERPOOL_ID=${COGNITO_USERPOOL_ID}"
 echo
 echo "🔵 Trying to signup by sending POST request to /signup endpoint..."
 
-RESPONSE=$(curl -s -X POST \
+HTTP_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
   https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/signup \
   -H "Content-Type: application/json" \
   -d '{
@@ -100,8 +100,10 @@ RESPONSE=$(curl -s -X POST \
         "password": "'"${PASSWORD}"'"
       }')
 
+STATUS_CODE=$(echo "$HTTP_RESPONSE" | tail -n1)
+RESPONSE=$(echo "$HTTP_RESPONSE" | sed '$d')
+
 echo ${RESPONSE}
-STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
 
 if [ "$STATUS_CODE" -eq 200 ]; then
     echo "✅ Success"
@@ -109,6 +111,7 @@ else
     echo "❌ Failed with status: $STATUS_CODE"
     exit 1
 fi
+
 
 echo
 echo "🔵 Getting Cognito list of users..."
@@ -126,7 +129,7 @@ fi
 echo
 echo "🔵 Getting access tokens (POST /signin)..."
 
-RESPONSE=$(curl -s -X POST \
+HTTP_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
   https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/signin \
   -H "Content-Type: application/json" \
   -d '{
@@ -134,8 +137,10 @@ RESPONSE=$(curl -s -X POST \
         "password": "'"${PASSWORD}"'"
       }')
 
+STATUS_CODE=$(echo "$HTTP_RESPONSE" | tail -n1)
+RESPONSE=$(echo "$HTTP_RESPONSE" | sed '$d')
+
 echo ${RESPONSE}
-STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
 
 if [ "$STATUS_CODE" -eq 200 ]; then
     echo "✅ Success"
@@ -144,7 +149,7 @@ else
     exit 1
 fi
 
-ID_TOKEN=$(echo "$RESPONSE" | jq -r '.body | fromjson | .idToken')
+ID_TOKEN=$(echo "$RESPONSE" | jq -r '.idToken')
 
 echo
 echo ID_TOKEN=${ID_TOKEN}
@@ -153,7 +158,7 @@ echo ID_TOKEN=${ID_TOKEN}
 echo
 echo "🔵 Creating a table..."
 
-RESPONSE=$(curl -s -X POST \
+HTTP_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
   https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables \
   -H "Content-Type: application/json" \
   -d '{
@@ -164,9 +169,13 @@ RESPONSE=$(curl -s -X POST \
         "minOrder": 100
       }')
 
+
+STATUS_CODE=$(echo "$HTTP_RESPONSE" | tail -n1)
+RESPONSE=$(echo "$HTTP_RESPONSE" | sed '$d')
+
 echo ${RESPONSE}
-STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
-CREATED_TABLE_ID=$(echo "$RESPONSE" | jq -r '.body | fromjson | .id')
+
+CREATED_TABLE_ID=$(echo "$RESPONSE" | jq -r '.id')
 
 if [ "$STATUS_CODE" -eq 200 ]; then
     echo "✅ Success"
@@ -179,9 +188,10 @@ fi
 echo
 echo "🔵 Fetching all tables..."
 
-RESPONSE=$(curl -s https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables)
+HTTP_RESPONSE=$(curl -s -w "\n%{http_code}" https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables)
 
-STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+STATUS_CODE=$(echo "$HTTP_RESPONSE" | tail -n1)
+RESPONSE=$(echo "$HTTP_RESPONSE" | sed '$d')
 
 if [ "$STATUS_CODE" -eq 200 ]; then
     echo "✅ Success"
@@ -190,13 +200,13 @@ else
     exit 1
 fi
 
-echo "$RESPONSE" | jq -r '.body | fromjson | .tables'
+echo "$RESPONSE" | jq -r '.tables'
 
 
 echo
 echo "🔵 Creating a reservation..."
 
-RESPONSE=$(curl -s -X POST \
+RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
   https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/reservations \
   -H "Content-Type: application/json" \
   -d '{
@@ -208,7 +218,8 @@ RESPONSE=$(curl -s -X POST \
         "slotTimeEnd": "15:00"
       }')
 
-STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+STATUS_CODE=$(echo "$HTTP_RESPONSE" | tail -n1)
+RESPONSE=$(echo "$HTTP_RESPONSE" | sed '$d')
 
 if [ "$STATUS_CODE" -eq 200 ]; then
     echo "✅ Success"
@@ -221,9 +232,10 @@ fi
 echo
 echo "🔵 Fetching all reservations..."
 
-RESPONSE=$(curl -s https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/reservations)
+RESPONSE=$(curl -s -w "\n%{http_code}" https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/reservations)
 
-STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+STATUS_CODE=$(echo "$HTTP_RESPONSE" | tail -n1)
+RESPONSE=$(echo "$HTTP_RESPONSE" | sed '$d')
 
 if [ "$STATUS_CODE" -eq 200 ]; then
     echo "✅ Success"
@@ -238,9 +250,10 @@ echo "$RESPONSE" | jq -r '.body | fromjson | .reservations'
 echo
 echo "🔵 Fetching table data for table with ID=${CREATED_TABLE_ID}..."
 
-RESPONSE=$(curl -s https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables/${CREATED_TABLE_ID})
+RESPONSE=$(curl -s -w "\n%{http_code}" https://${API_GATEWAY_ID}.execute-api.${REGION}.amazonaws.com/api/tables/${CREATED_TABLE_ID})
 
-STATUS_CODE=$(echo "$RESPONSE" | jq -r '.statusCode')
+STATUS_CODE=$(echo "$HTTP_RESPONSE" | tail -n1)
+RESPONSE=$(echo "$HTTP_RESPONSE" | sed '$d')
 
 if [ "$STATUS_CODE" -eq 200 ]; then
     echo "✅ Success"
@@ -249,4 +262,4 @@ else
     exit 1
 fi
 
-echo "$RESPONSE" | jq -r '.body'
+echo "$RESPONSE"
