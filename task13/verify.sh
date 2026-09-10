@@ -1,9 +1,7 @@
-# aws logs tail /aws/lambda/cmtr-mxhmo8sx-api_handler --follow
-
 REGION="eu-west-1"
-FIRST_NAME="John"
-LAST_NAME="Smith"
-EMAIL="john@example.com"
+FIRST_NAME="John1"
+LAST_NAME="Smith1"
+EMAIL="john@example1.com"
 PASSWORD="Password1234$"
 TABLE_ID=1
 

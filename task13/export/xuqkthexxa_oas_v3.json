@@ -2,11 +2,11 @@
   "openapi": "3.0.1",
   "info": {
     "title": "task13_api",
-    "version": "2026-09-10T11:18:54Z"
+    "version": "2026-09-10T14:27:41Z"
   },
   "servers": [
     {
-      "url": "https://ms3oleqlg3.execute-api.eu-west-1.amazonaws.com/{basePath}",
+      "url": "https://xuqkthexxa.execute-api.eu-west-1.amazonaws.com/{basePath}",
       "variables": {
         "basePath": {
           "default": "api"
@@ -21,11 +21,6 @@
         "description": "Returns a list of all restaurant reservations.",
         "tags": [
           "Reservations"
-        ],
-        "security": [
-          {
-            "authorizer": []
-          }
         ],
         "responses": {
           "200": {
@@ -50,8 +45,7 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "type": "aws_proxy",
-          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:686255976584:function:api_handler/invocations",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:711387101435:function:api_handler/invocations",
           "httpMethod": "POST",
           "responses": {
             "default": {
@@ -62,7 +56,8 @@
             }
           },
           "passthroughBehavior": "when_no_match",
-          "responseTransferMode": "BUFFERED"
+          "responseTransferMode": "BUFFERED",
+          "type": "aws_proxy"
         }
       },
       "post": {
@@ -70,11 +65,6 @@
         "description": "Creates a reservation for a restaurant table.",
         "tags": [
           "Reservations"
-        ],
-        "security": [
-          {
-            "authorizer": []
-          }
         ],
         "requestBody": {
           "required": true,
@@ -109,8 +99,7 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "type": "aws_proxy",
-          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:686255976584:function:api_handler/invocations",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:711387101435:function:api_handler/invocations",
           "httpMethod": "POST",
           "responses": {
             "default": {
@@ -121,16 +110,17 @@
             }
           },
           "passthroughBehavior": "when_no_match",
-          "responseTransferMode": "BUFFERED"
+          "responseTransferMode": "BUFFERED",
+          "type": "aws_proxy"
         }
       },
       "options": {
         "x-amazon-apigateway-integration": {
-          "type": "mock",
           "requestTemplates": {
             "application/json": "{\"statusCode\": 200}"
           },
-          "passthroughBehavior": "when_no_match"
+          "passthroughBehavior": "when_no_match",
+          "type": "mock"
         }
       }
     },
@@ -140,11 +130,6 @@
         "description": "Returns a list of all restaurant tables.",
         "tags": [
           "Tables"
-        ],
-        "security": [
-          {
-            "authorizer": []
-          }
         ],
         "responses": {
           "200": {
@@ -169,8 +154,7 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "type": "aws_proxy",
-          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:686255976584:function:api_handler/invocations",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:711387101435:function:api_handler/invocations",
           "httpMethod": "POST",
           "responses": {
             "default": {
@@ -181,7 +165,8 @@
             }
           },
           "passthroughBehavior": "when_no_match",
-          "responseTransferMode": "BUFFERED"
+          "responseTransferMode": "BUFFERED",
+          "type": "aws_proxy"
         }
       },
       "post": {
@@ -189,11 +174,6 @@
         "description": "Creates a restaurant table.",
         "tags": [
           "Tables"
-        ],
-        "security": [
-          {
-            "authorizer": []
-          }
         ],
         "requestBody": {
           "required": true,
@@ -228,8 +208,7 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "type": "aws_proxy",
-          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:686255976584:function:api_handler/invocations",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:711387101435:function:api_handler/invocations",
           "httpMethod": "POST",
           "responses": {
             "default": {
@@ -240,16 +219,17 @@
             }
           },
           "passthroughBehavior": "when_no_match",
-          "responseTransferMode": "BUFFERED"
+          "responseTransferMode": "BUFFERED",
+          "type": "aws_proxy"
         }
       },
       "options": {
         "x-amazon-apigateway-integration": {
-          "type": "mock",
           "requestTemplates": {
             "application/json": "{\"statusCode\": 200}"
           },
-          "passthroughBehavior": "when_no_match"
+          "passthroughBehavior": "when_no_match",
+          "type": "mock"
         }
       }
     },
@@ -293,8 +273,7 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "type": "aws_proxy",
-          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:686255976584:function:api_handler/invocations",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:711387101435:function:api_handler/invocations",
           "httpMethod": "POST",
           "responses": {
             "default": {
@@ -305,16 +284,17 @@
             }
           },
           "passthroughBehavior": "when_no_match",
-          "responseTransferMode": "BUFFERED"
+          "responseTransferMode": "BUFFERED",
+          "type": "aws_proxy"
         }
       },
       "options": {
         "x-amazon-apigateway-integration": {
-          "type": "mock",
           "requestTemplates": {
             "application/json": "{\"statusCode\": 200}"
           },
-          "passthroughBehavior": "when_no_match"
+          "passthroughBehavior": "when_no_match",
+          "type": "mock"
         }
       }
     },
@@ -358,8 +338,7 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "type": "aws_proxy",
-          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:686255976584:function:api_handler/invocations",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:711387101435:function:api_handler/invocations",
           "httpMethod": "POST",
           "responses": {
             "default": {
@@ -370,16 +349,17 @@
             }
           },
           "passthroughBehavior": "when_no_match",
-          "responseTransferMode": "BUFFERED"
+          "responseTransferMode": "BUFFERED",
+          "type": "aws_proxy"
         }
       },
       "options": {
         "x-amazon-apigateway-integration": {
-          "type": "mock",
           "requestTemplates": {
             "application/json": "{\"statusCode\": 200}"
           },
-          "passthroughBehavior": "when_no_match"
+          "passthroughBehavior": "when_no_match",
+          "type": "mock"
         }
       }
     },
@@ -389,11 +369,6 @@
         "description": "Returns information on a specific table.",
         "tags": [
           "TableInfo"
-        ],
-        "security": [
-          {
-            "authorizer": []
-          }
         ],
         "parameters": [
           {
@@ -428,8 +403,7 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "type": "aws_proxy",
-          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:686255976584:function:api_handler/invocations",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:711387101435:function:api_handler/invocations",
           "httpMethod": "POST",
           "responses": {
             "default": {
@@ -440,7 +414,8 @@
             }
           },
           "passthroughBehavior": "when_no_match",
-          "responseTransferMode": "BUFFERED"
+          "responseTransferMode": "BUFFERED",
+          "type": "aws_proxy"
         }
       },
       "options": {
@@ -455,11 +430,11 @@
           }
         ],
         "x-amazon-apigateway-integration": {
-          "type": "mock",
           "requestTemplates": {
             "application/json": "{\"statusCode\": 200}"
           },
-          "passthroughBehavior": "when_no_match"
+          "passthroughBehavior": "when_no_match",
+          "type": "mock"
         }
       }
     }
@@ -618,8 +593,7 @@
           "id",
           "number",
           "places",
-          "isVip",
-          "minOrder"
+          "isVip"
         ],
         "properties": {
           "id": {
