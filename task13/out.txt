@@ -1,0 +1,60 @@
+{
+    "items": [
+        {
+            "id": "9wrkzz7ky2",
+            "path": "/"
+        },
+        {
+            "id": "mmsyfb",
+            "parentId": "9wrkzz7ky2",
+            "pathPart": "signup",
+            "path": "/signup",
+            "resourceMethods": {
+                "OPTIONS": {},
+                "POST": {}
+            }
+        },
+        {
+            "id": "pe1kt5",
+            "parentId": "9wrkzz7ky2",
+            "pathPart": "reservations",
+            "path": "/reservations",
+            "resourceMethods": {
+                "GET": {},
+                "OPTIONS": {},
+                "POST": {}
+            }
+        },
+        {
+            "id": "qju2zs",
+            "parentId": "t9iouy",
+            "pathPart": "{tableId}",
+            "path": "/tables/{tableId}",
+            "resourceMethods": {
+                "GET": {},
+                "OPTIONS": {}
+            }
+        },
+        {
+            "id": "t9iouy",
+            "parentId": "9wrkzz7ky2",
+            "pathPart": "tables",
+            "path": "/tables",
+            "resourceMethods": {
+                "GET": {},
+                "OPTIONS": {},
+                "POST": {}
+            }
+        },
+        {
+            "id": "unm6gi",
+            "parentId": "9wrkzz7ky2",
+            "pathPart": "signin",
+            "path": "/signin",
+            "resourceMethods": {
+                "OPTIONS": {},
+                "POST": {}
+            }
+        }
+    ]
+}
