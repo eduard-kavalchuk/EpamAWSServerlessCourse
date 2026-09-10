@@ -84,35 +84,11 @@
     },
     "tags": {}
   },
-  "${api_ui_hoster}": {
+  "api-ui-hoster": {
     "resource_type": "s3_bucket",
     "acl": "private",
     "cors": [],
-    "policy": {
-      "Version": "2012-10-17",
-      "Statement": [
-        {
-          "Sid": "AllowSwaggerUIAccess",
-          "Effect": "Allow",
-          "Principal": "*",
-          "Action": [
-            "s3:GetObject"
-          ],
-          "Resource": [
-            "arn:aws:s3:::${api_ui_hoster}/*"
-          ],
-          "Condition": {
-            "IpAddress": {
-              "aws:SourceIp": [
-                "18.184.51.32/32",
-                "3.123.112.118/32",
-                "213.184.231.20/32"
-              ]
-            }
-          }
-        }
-      ]
-    },
+    "policy": {},
     "public_access_block": {
       "block_public_acls": true,
       "ignore_public_acls": true,
