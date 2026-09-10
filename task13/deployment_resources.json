@@ -66,14 +66,63 @@
       "require_lowercase": true,
       "require_numbers": true
     },
-    "auto_verified_attributes": ["email"],
-    "username_attributes": ["email"],
+    "auto_verified_attributes": [
+      "email"
+    ],
+    "username_attributes": [
+      "email"
+    ],
     "sms_configuration": {},
     "custom_attributes": [],
     "client": {
       "client_name": "booking-client",
       "generate_secret": false,
-      "explicit_auth_flows": ["ALLOW_ADMIN_USER_PASSWORD_AUTH", "ALLOW_USER_PASSWORD_AUTH"]
+      "explicit_auth_flows": [
+        "ALLOW_ADMIN_USER_PASSWORD_AUTH",
+        "ALLOW_USER_PASSWORD_AUTH"
+      ]
+    },
+    "tags": {}
+  },
+  "api-ui-hoster": {
+    "resource_type": "s3_bucket",
+    "acl": "private",
+    "cors": [],
+    "policy": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "AllowSwaggerUIAccess",
+          "Effect": "Allow",
+          "Principal": "*",
+          "Action": [
+            "s3:GetObject"
+          ],
+          "Resource": [
+            "arn:aws:s3:::cmtr-mxhmo8sx-api-ui-hoster/*"
+          ],
+          "Condition": {
+            "IpAddress": {
+              "aws:SourceIp": [
+                "18.184.51.32/32",
+                "3.123.112.118/32",
+                "213.184.231.20/32"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "public_access_block": {
+      "block_public_acls": true,
+      "ignore_public_acls": true,
+      "block_public_policy": false,
+      "restrict_public_buckets": false
+    },
+    "website_hosting": {
+      "enabled": true,
+      "index_document": "index.html",
+      "error_document": "index.html"
     },
     "tags": {}
   }
