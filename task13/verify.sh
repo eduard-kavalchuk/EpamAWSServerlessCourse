@@ -1,3 +1,5 @@
+# aws logs tail /aws/lambda/cmtr-mxhmo8sx-api_handler --follow
+
 REGION="eu-west-1"
 FIRST_NAME="John"
 LAST_NAME="Smith"
