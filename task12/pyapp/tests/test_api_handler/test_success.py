@@ -118,7 +118,7 @@ class TestSuccess(ApiHandlerLambdaTestCase):
                 "tableNumber": 1,
                 "clientName": "John Smith",
                 "phoneNumber": "+375291112233",
-                "date": "2026-09-09",
+                "date": "2027-09-09",
                 "slotTimeStart": "13:00",
                 "slotTimeEnd": "15:00"
             })
@@ -149,7 +149,7 @@ class TestSuccess(ApiHandlerLambdaTestCase):
                         "tableNumber": 1,
                         "clientName": "John Smith",
                         "phoneNumber": "+375291112233",
-                        "date": "2026-09-09",
+                        "date": "2027-09-09",
                         "slotTimeStart": "13:00",
                         "slotTimeEnd": "15:00"
                     }
@@ -180,7 +180,7 @@ class TestSuccess(ApiHandlerLambdaTestCase):
                 "tableNumber": 1,
                 "clientName": "John Smith",
                 "phoneNumber": "+375291112233",
-                "date": "2026-09-09",
+                "date": "2027-09-09",
                 "slotTimeStart": "13:00",
                 "slotTimeEnd": "15:00"
             })
@@ -236,7 +236,7 @@ class TestSuccess(ApiHandlerLambdaTestCase):
                         "tableNumber": 1,
                         "clientName": "Client name",
                         "phoneNumber": "123-45-67",
-                        "date": "2026-09-10",
+                        "date": "2027-09-10",
                         "slotTimeStart": "09:30",
                         "slotTimeEnd": "17:45",
                     }
