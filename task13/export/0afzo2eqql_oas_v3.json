@@ -2,11 +2,11 @@
   "openapi": "3.0.1",
   "info": {
     "title": "task13_api",
-    "version": "2026-09-10T14:27:41Z"
+    "version": "2026-09-11T07:36:10Z"
   },
   "servers": [
     {
-      "url": "https://xuqkthexxa.execute-api.eu-west-1.amazonaws.com/{basePath}",
+      "url": "https://0afzo2eqql.execute-api.eu-west-1.amazonaws.com/{basePath}",
       "variables": {
         "basePath": {
           "default": "api"
@@ -45,7 +45,7 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:711387101435:function:api_handler/invocations",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:522814710681:function:api_handler/invocations",
           "httpMethod": "POST",
           "responses": {
             "default": {
@@ -99,7 +99,7 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:711387101435:function:api_handler/invocations",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:522814710681:function:api_handler/invocations",
           "httpMethod": "POST",
           "responses": {
             "default": {
@@ -154,7 +154,7 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:711387101435:function:api_handler/invocations",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:522814710681:function:api_handler/invocations",
           "httpMethod": "POST",
           "responses": {
             "default": {
@@ -208,7 +208,7 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:711387101435:function:api_handler/invocations",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:522814710681:function:api_handler/invocations",
           "httpMethod": "POST",
           "responses": {
             "default": {
@@ -273,7 +273,7 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:711387101435:function:api_handler/invocations",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:522814710681:function:api_handler/invocations",
           "httpMethod": "POST",
           "responses": {
             "default": {
@@ -338,7 +338,7 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:711387101435:function:api_handler/invocations",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:522814710681:function:api_handler/invocations",
           "httpMethod": "POST",
           "responses": {
             "default": {
@@ -403,7 +403,7 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:711387101435:function:api_handler/invocations",
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:522814710681:function:api_handler/invocations",
           "httpMethod": "POST",
           "responses": {
             "default": {
@@ -425,7 +425,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             }
           }
         ],
