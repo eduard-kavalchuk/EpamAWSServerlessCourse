@@ -1,0 +1,34 @@
+{
+  "version": "1.0",
+  "name": "batch_processor",
+  "func_name": "handler.lambda_handler",
+  "resource_type": "lambda",
+  "iam_role_name": "batch_processor-role",
+  "runtime": "python3.10",
+  "memory": 512,
+  "timeout": 100,
+  "lambda_path": "lambdas/batch_processor",
+  "dependencies": [],
+  "event_sources": [
+    {
+      "resource_type": "s3_trigger",
+      "target_bucket": "data-transfer-storage",
+      "s3_events": [
+        "s3:ObjectCreated:*"
+      ]
+    }
+  ],
+  "env_variables": {},
+  "publish_version": true,
+  "alias": "${lambdas_alias_name}",
+  "url_config": {},
+  "ephemeral_storage": 512,
+  "logs_expiration": "${logs_expiration}",
+  "subnet_ids": [
+    "${lambda_sn_id}"
+  ],
+  "security_group_ids": [
+    "${logistic_sg_id}"
+  ],
+  "tags": {}
+}
