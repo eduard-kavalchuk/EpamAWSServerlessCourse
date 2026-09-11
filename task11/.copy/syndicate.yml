@@ -1,0 +1,16 @@
+account_id: '241533143441'
+deploy_target_bucket: syndicate-education-platform-custom-sandbox-artifacts-2941/mxhmo8sx/task11
+expiration: 2026-09-11 12:08:23.217650+00:00
+extended_prefix_mode: true
+project_path: /home/ed/EpamAWSServerlessCourse/task11
+region: eu-west-1
+resources_prefix: cmtr-mxhmo8sx-
+tags:
+  run_id: JAP-35
+  task_id: task11
+  topic_id: stm
+  user_id: mxhmo8sx
+temp_aws_access_key_id: ASIATQPD7JGIXJRRQIHF
+temp_aws_secret_access_key: sXVVI2Q4ql2Q8MyfGu8ENJgfiJIFomaM4mWYnY/r
+temp_aws_session_token: IQoJb3JpZ2luX2VjENP//////////wEaDGV1LWNlbnRyYWwtMSJIMEYCIQD7AH+OfRLmlFglSFDhDv4sI+XK4qImg2F397JIUYbKEAIhAMxHZiw4ltFUyyacVomRhvKVd+kGGg2X4mPZEoCYx4vwKtECCJz//////////wEQABoMMjQxNTMzMTQzNDQxIgyUD3NLbiyPzTxB4XEqpQLM6IsHreLDOv1INHpzJSjw2QkQttTC7RMaCcfWFDHyoqkJ/VOhXborgEhnFHXRuXhp2kAxe2yJ29mod/gycQy4fYzv4nfgfuTsRUp0Veb5cV69LZZem8T/OYNyPTbNlXGxlTVLjhDjhlp9oj50buwnmTdUmUwPLidvPHOz1E25RYVB7g9XkJ0P1ypXTGhiyt7cpViDnCOPo1N36HdmTKT8bKT3XvxzC3iakeYn4PsgVFpIP3IkKNNnMRxby3w3XTCA6D11vPapILgrRsTfZoBzC9qhceZNrDGN4hxets4dK5Hx76Lah89eBdjlqrsMNm6XNVvOCFlGH3zKiajd5zR0iBC1ffJk4VBizN4m+ylaVhf+P0MXK8sC4sjFana0ep5mllvveDDvxo/VBjqcAVrmIFDHoPvhqV117taMy+Pk7KzZetjn2y30/HKCBsbJ8rj4Xs2Xe+L2TUc6a612RMYjZGghOHAx7TT5lDrtaT+0VpBrxz4Pgi7dAseGz3kSN6N0Ax435LtG7FnMw2QzGeXlSvEW6QLFT+IO5gTe+8GskW7InUDF28VXli6RSlNpva5S41mrEixuZELmmclpOQjtbQTYbettKTDoaQ==
+use_temp_creds: false

@@ -227,6 +227,7 @@
   },
   "data-transfer-storage": {
     "resource_type": "s3_bucket",
+    "location": "eu-west-1",
     "acl": "private",
     "cors": [],
     "policy": {},
@@ -258,10 +259,6 @@
     "engine": "aurora-postgresql",
     "cluster_name": "logistic-cluster",
     "publicly_accessible": true,
-    "vpc_security_group_ids": [
-      "${logistic_sg_id}",
-      "${student_access_sg_id}"
-    ],
     "db_subnet_group_name": "logistic-subnet-group",
     "tags": {}
   }
