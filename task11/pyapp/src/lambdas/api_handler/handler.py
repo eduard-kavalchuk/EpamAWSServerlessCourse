@@ -1,7 +1,7 @@
 from commons.log_helper import get_logger
 from commons.abstract_lambda import AbstractLambda
 
-from commons.db import execute
+from commons.db import execute, get_connection, fetch_one
 import os
 import json
 
@@ -66,28 +66,31 @@ class ApiHandler(AbstractLambda):
 
 
     def handle_request(self, event, context):
-        # return {
-        #     "statusCode": 200,
-        #     "body": json.dumps(dict(os.environ))
-        # }
 
-        print(dict(os.environ))
-    
-        if (
-            event.get("resource") == "/initdb"
-            and event.get("httpMethod") == "POST"
-        ):
-            execute(INIT_SQL)
-
-            return {
-                "statusCode": 200,
-                "body": "Database initialized"
-            }
+        result = fetch_one("SELECT 1")
 
         return {
-            "statusCode": 404,
-            "body": "Not found"
+            "statusCode": 200,
+            "body": str(result)
         }
+
+        # print(dict(os.environ))
+    
+        # if (
+        #     event.get("resource") == "/initdb"
+        #     and event.get("httpMethod") == "POST"
+        # ):
+        #     execute(INIT_SQL)
+
+        #     return {
+        #         "statusCode": 200,
+        #         "body": "Database initialized"
+        #     }
+
+        # return {
+        #     "statusCode": 404,
+        #     "body": "Not found"
+        # }
 
     
 HANDLER = ApiHandler()

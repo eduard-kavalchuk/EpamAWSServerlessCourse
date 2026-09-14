@@ -8,7 +8,6 @@ import pg8000
 
 _cached_secret = None
 
-
 def get_secret():
     global _cached_secret
 
@@ -45,17 +44,52 @@ def get_connection():
 
 @contextmanager
 def get_cursor():
-    conn = get_connection()
+    conn = None
+    cur = None
 
     try:
+        conn = get_connection()
         cur = conn.cursor()
+
         yield conn, cur
+
     finally:
-        cur.close()
-        conn.close()
+        if cur:
+            cur.close()
+
+        if conn:
+            conn.close()
 
 
-def execute(query):
+def fetch_one(query, params=None):
+    with get_cursor() as (_, cur):
+        if params is None:
+            cur.execute(query)
+        else:
+            cur.execute(query, params)
+        return cur.fetchone()
+
+
+def fetch_all(query, params=None):
+    with get_cursor() as (_, cur):
+        if params is None:
+            cur.execute(query)
+        else:
+            cur.execute(query, params)
+
+        return cur.fetchall()
+
+
+def execute(query, params=None):
     with get_cursor() as (conn, cur):
-        cur.execute(query)
+
+        print("execute entered")
+
+        if params is None:
+            cur.execute(query)
+        else:
+            cur.execute(query, params)
+
         conn.commit()
+
+        print("commit completed")

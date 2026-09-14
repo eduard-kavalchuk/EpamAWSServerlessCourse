@@ -2,9 +2,32 @@ from pyapp.tests.test_api_handler import ApiHandlerLambdaTestCase
 
 from unittest.mock import MagicMock, patch
 import pytest
+import os
+
+
+os.environ["DB_HOST"] = "endpoint"
+os.environ["DB_SECRET_NAME"] = "logistic-cluster"
+os.environ["DB_NAME"] = "logisticdb"
 
 
 class TestSuccess(ApiHandlerLambdaTestCase):
+    class TestSuccess:
+
+        def test_lambda_returns_200(self):
+            with patch(
+                "lambdas.api_handler.handler.execute"
+            ) as mock_fetch_one:
+                
+                mock_fetch_one.return_value = (1,)
+
+                result = self.HANDLER.handle_request(dict(), None)
+
+                assert result["statusCode"] == 200
+                assert result["body"] == "(1,)"
+
+            mock_fetch_one.assert_called_once_with("SELECT 1")
+    
+
     # def test_initdb(self):
     #     with patch(
     #         "lambdas.api_handler.handler.execute"
@@ -22,9 +45,9 @@ class TestSuccess(ApiHandlerLambdaTestCase):
     #         mock_execute.assert_called_once()
 
 
-    def test_lambda_returns_200(self):
-        self.HANDLER.handle_request(None, None)
-        assert 1 == 1
+    # def test_lambda_returns_200(self):
+    #     self.HANDLER.handle_request(None, None)
+    #     assert 1 == 1
 
     # def test_lambda_returns_200(self):
     #     with patch(
