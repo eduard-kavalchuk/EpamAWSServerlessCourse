@@ -4,7 +4,7 @@ from commons.abstract_lambda import AbstractLambda
 import csv
 
 from io import StringIO
-from commons.db import execute_many
+from commons.db import execute_many, fetch_all
 
 import boto3
 
@@ -114,7 +114,13 @@ def process_shipments(content):
     for row in rows:
         try:
             weight = float(row["weight_kg"])
-        except:
+        except (ValueError, TypeError):
+            continue
+
+        if not row["shipment_id"]:
+            continue
+
+        if not row["order_id"]:
             continue
 
         values.append(
@@ -134,6 +140,10 @@ def process_shipments(content):
             chunk
         )
 
+    print(
+        f"Inserted {len(values)} shipment rows"
+    )
+
 
 def process_carriers(content):
     rows = parse_csv(content)
@@ -146,13 +156,20 @@ def process_carriers(content):
     values = []
 
     for row in rows:
+        if not row["carrier_id"]:
+            continue
+
         values.append(
             (
                 row["carrier_id"],
                 row["name"],
                 row["email"],
                 row["phone"],
-                row["is_active"].lower() == "true"
+                str(row["is_active"]).strip().lower() in (
+                    "true",
+                    "1",
+                    "yes"
+                )
             )
         )
 
@@ -161,6 +178,10 @@ def process_carriers(content):
             CARRIERS_INSERT_SQL,
             chunk
         )
+
+    print(
+        f"Inserted {len(values)} carrier rows"
+    )
 
 
 def process_status_updates(content):
@@ -171,12 +192,38 @@ def process_status_updates(content):
         f"({len(rows)} rows)"
     )
 
+    existing_shipments = {
+        row[0]
+        for row in fetch_all(
+            "SELECT shipment_id FROM shipments"
+        )
+    }
+
+    existing_carriers = {
+        row[0]
+        for row in fetch_all(
+            "SELECT carrier_id FROM carriers"
+        )
+    }
+
     values = []
 
     for row in rows:
+        if row["shipment_id"] not in existing_shipments:
+            continue
+
+        if row["carrier_id"] not in existing_carriers:
+            continue
+
         status = row["status"]
 
         if status not in VALID_STATUSES:
+            continue
+
+        if not row["shipment_id"]:
+            continue
+
+        if not row["carrier_id"]:
             continue
 
         values.append(
@@ -196,6 +243,11 @@ def process_status_updates(content):
             chunk
         )
 
+    print(
+        f"Inserted {len(values)} status updates rows"
+    )
+
+
 class BatchProcessor(AbstractLambda):
 
     def validate_request(self, event):
@@ -205,42 +257,46 @@ class BatchProcessor(AbstractLambda):
     def handle_request(self, event, context):
         print("handle_request invoked")
 
-        record = event["Records"][0]
+        # record = event["Records"][0]
 
-        bucket = (
-            record["s3"]["bucket"]["name"]
-        )
+        for record in event["Records"]:
 
-        key = (
-            record["s3"]["object"]["key"]
-        )
-
-        print(
-            f"bucket={bucket}, "
-            f"key={key}"
-        )
-
-        content = download_s3_object(
-            bucket,
-            key
-        )
-
-        if key.endswith("shipments.csv"):
-
-            process_shipments(content)
-
-        elif key.endswith("carriers.csv"):
-
-            process_carriers(content)
-
-        elif key.endswith("status_updates.csv"):
-
-            process_status_updates(content)
-
-        else:
-            print(
-                f"Unsupported file: {key}"
+            bucket = (
+                record["s3"]["bucket"]["name"]
             )
+
+            key = (
+                record["s3"]["object"]["key"]
+            )
+
+            print(
+                f"bucket={bucket}, "
+                f"key={key}"
+            )
+
+            content = download_s3_object(
+                bucket,
+                key
+            )
+
+            filename = key.lower()
+
+            if filename.endswith("shipments.csv"):
+
+                process_shipments(content)
+
+            elif filename.endswith("carriers.csv"):
+
+                process_carriers(content)
+
+            elif filename.endswith("status_updates.csv"):
+
+                process_status_updates(content)
+
+            else:
+                print(
+                    f"Unsupported file: {filename}"
+                )
 
         return {
             "statusCode": 200,
