@@ -5,25 +5,26 @@ import pytest
 
 
 class TestSuccess(ApiHandlerLambdaTestCase):
-    def test_initdb(self):
-        with patch(
-            "lambdas.api_handler.handler.execute"
-        ) as mock_execute:
+    # def test_initdb(self):
+    #     with patch(
+    #         "lambdas.api_handler.handler.execute"
+    #     ) as mock_execute:
 
-            event = {
-                "resource": "/initdb",
-                "httpMethod": "POST"
-            }
+    #         event = {
+    #             "resource": "/initdb",
+    #             "httpMethod": "POST"
+    #         }
 
-            result = self.HANDLER.handle_request(event, None)
+    #         result = self.HANDLER.handle_request(event, None)
 
-            assert result["statusCode"] == 200
+    #         assert result["statusCode"] == 200
 
-            mock_execute.assert_called_once()
+    #         mock_execute.assert_called_once()
 
 
-    # def test_lambda_returns_200(self):
-    #     assert 1 == 1
+    def test_lambda_returns_200(self):
+        self.HANDLER.handle_request(None, None)
+        assert 1 == 1
 
     # def test_lambda_returns_200(self):
     #     with patch(

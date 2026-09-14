@@ -2,6 +2,8 @@ from commons.log_helper import get_logger
 from commons.abstract_lambda import AbstractLambda
 
 from commons.db import execute
+import os
+import json
 
 _LOG = get_logger(__name__)
 
@@ -64,6 +66,13 @@ class ApiHandler(AbstractLambda):
 
 
     def handle_request(self, event, context):
+        # return {
+        #     "statusCode": 200,
+        #     "body": json.dumps(dict(os.environ))
+        # }
+
+        print(dict(os.environ))
+    
         if (
             event.get("resource") == "/initdb"
             and event.get("httpMethod") == "POST"

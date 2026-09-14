@@ -19,8 +19,16 @@
     }
   ],
   "env_variables": {
-    "DB_HOST": "${logistic-cluster.endpoint}",
-    "DB_SECRET_NAME": "${logistic-cluster.master_user_secret_name}",
+    "DB_HOST": {
+      "resource_name": "logistic-cluster",
+      "resource_type": "rds_db_cluster",
+      "parameter": "endpoint"
+    },
+    "DB_SECRET_NAME": {
+      "resource_name": "logistic-cluster",
+      "resource_type": "rds_db_cluster",
+      "parameter": "master_user_secret_name"
+    },
     "DB_NAME": "logisticdb"
   },
   "publish_version": true,
