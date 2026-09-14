@@ -249,6 +249,7 @@ curl -X POST "$BASE_URL/shipments" \
     "destination":"Warsaw",
     "weight_kg":10.5
   }'
+  
 
 echo
 echo "🔵 Get shipment..."
