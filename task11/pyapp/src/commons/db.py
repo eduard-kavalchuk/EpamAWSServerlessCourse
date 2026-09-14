@@ -6,6 +6,7 @@ from contextlib import contextmanager
 import boto3
 import pg8000
 
+
 _cached_secret = None
 
 def get_secret():
@@ -82,14 +83,45 @@ def fetch_all(query, params=None):
 
 def execute(query, params=None):
     with get_cursor() as (conn, cur):
+        try:
+            if params is None:
+                cur.execute(query)
+            else:
+                cur.execute(query, params)
 
-        print("execute entered")
+            conn.commit()
 
-        if params is None:
-            cur.execute(query)
-        else:
-            cur.execute(query, params)
+        except Exception:
+            conn.rollback()
+            raise
 
-        conn.commit()
 
-        print("commit completed")
+def execute_returning(query, params=None):
+    with get_cursor() as (conn, cur):
+        try:
+            if params is None:
+                cur.execute(query)
+            else:
+                cur.execute(query, params)
+
+            result = cur.fetchone()
+            conn.commit()
+
+            return result
+        
+        except Exception:
+            conn.rollback()
+            raise
+
+
+def execute_many(query, values):
+    with get_cursor() as (conn, cur):
+        try:
+            cur.executemany(query, values)
+            conn.commit()
+
+        except Exception:
+            conn.rollback()
+            raise
+
+

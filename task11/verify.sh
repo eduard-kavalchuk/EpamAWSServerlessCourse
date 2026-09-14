@@ -1,5 +1,5 @@
 REGION="eu-west-1"
-student_access_sg_id="sg-093489b15feed739d"
+student_access_sg_id="sg-0583d8ff9f131702c"
 DB_NAME="logisticdb"
 
 
@@ -159,6 +159,10 @@ API_ID=$(aws apigateway get-rest-apis \
 
 echo "✅ API_ID=${API_ID}"
 
+echo
+BASE_URL=https://${API_ID}.execute-api.${REGION}.amazonaws.com/api
+echo "✅ BASE_URL=$BASE_URL)"
+
 
 echo
 echo "🔵 Invoke endpoint: initdb"
@@ -175,11 +179,7 @@ else
     echo "❌ Failed to initialize database (status code $STATUS_CODE)"
 fi
 
-if [ "$RESPONSE" == "Database initialized" ]; then
-    echo "✅ Received response: $RESPONSE"
-else
-    echo "❌ Received response: $RESPONSE"
-fi
+echo "✅ Received response: $RESPONSE"
 
 
 echo
@@ -236,6 +236,117 @@ PGPASSWORD=$PASSWORD psql \
   -U $USERNAME \
   -d $DB_NAME \
   -c "\dt"
+
+
+echo
+echo "🔵 Create shipment..."
+curl -X POST "$BASE_URL/shipments" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "shipment_id":"ship001",
+    "order_id":"order001",
+    "origin":"Minsk",
+    "destination":"Warsaw",
+    "weight_kg":10.5
+  }'
+
+echo
+echo "🔵 Get shipment..."
+curl "$BASE_URL/shipments/ship001"
+
+echo
+echo "🔵 Update shipment..."
+curl -X PATCH "$BASE_URL/shipments/ship001" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "order_id":"order001_updated",
+    "origin":"Vilnius",
+    "destination":"Berlin",
+    "weight_kg":15.0
+  }'
+
+echo
+echo "🔵 Vefiry shipment update..."
+curl "$BASE_URL/shipments/ship001"
+
+echo
+echo "🔵 Create carrier..."
+curl -X POST "$BASE_URL/carriers" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "carrier_id":"car001",
+    "name":"DHL",
+    "email":"dhl@test.com",
+    "phone":"+1234567",
+    "is_active":true
+  }'
+
+echo
+echo "🔵 Get carrier..."
+curl "$BASE_URL/carriers/car001"
+
+echo
+echo "🔵 Update carrier..."
+curl -X PATCH "$BASE_URL/carriers/car001" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name":"DHL Express",
+    "email":"express@test.com",
+    "phone":"+7654321",
+    "is_active":true
+  }'
+
+echo
+echo "🔵 Verify carrier update..."
+curl "$BASE_URL/carriers/car001"
+
+echo
+echo "🔵 Create status update..."
+curl -X POST "$BASE_URL/statusupdates" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "shipment_id":"ship001",
+    "carrier_id":"car001",
+    "status":"CREATED",
+    "location":"Minsk",
+    "notes":"initial status"
+  }'
+
+echo
+echo "🔵 Read status updates..."
+curl "$BASE_URL/statusupdates/ship001"
+
+echo
+echo "🔵 Delete carrier..."
+curl -X DELETE "$BASE_URL/carriers/car001"
+
+echo
+echo "🔵 Delete shipment..."
+curl -X DELETE "$BASE_URL/shipments/ship001"
+
+echo
+echo "🔵 Verify deletions..."
+curl "$BASE_URL/shipments/ship001"
+
+echo
+echo "🔵 Invalid shipment..."
+curl "$BASE_URL/shipments/does_not_exist"
+
+echo
+echo "🔵 Invalid carrier..."
+curl "$BASE_URL/carriers/does_not_exist"
+
+echo
+echo "🔵 Invalid status..."
+curl -X POST "$BASE_URL/statusupdates" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "shipment_id":"ship001",
+    "carrier_id":"car001",
+    "status":"BAD_STATUS",
+    "location":"Minsk",
+    "notes":"x"
+  }'
 
 
 
