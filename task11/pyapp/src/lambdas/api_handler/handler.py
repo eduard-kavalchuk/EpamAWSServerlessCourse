@@ -66,31 +66,32 @@ class ApiHandler(AbstractLambda):
 
 
     def handle_request(self, event, context):
-
-        result = fetch_one("SELECT 1")
-
-        return {
-            "statusCode": 200,
-            "body": str(result)
-        }
-
-        # print(dict(os.environ))
-    
-        # if (
-        #     event.get("resource") == "/initdb"
-        #     and event.get("httpMethod") == "POST"
-        # ):
-        #     execute(INIT_SQL)
-
-        #     return {
-        #         "statusCode": 200,
-        #         "body": "Database initialized"
-        #     }
+        # result = fetch_one("SELECT 1")
 
         # return {
-        #     "statusCode": 404,
-        #     "body": "Not found"
+        #     "statusCode": 200,
+        #     "body": str(result)
         # }
+
+        if (
+            event.get("resource") == "/initdb"
+            and event.get("httpMethod") == "POST"
+        ):
+            print("Creating database schema")
+
+            execute(INIT_SQL)
+
+            print("Database schema created")
+
+            return {
+                "statusCode": 200,
+                "body": "Database initialized"
+            }
+
+        return {
+            "statusCode": 404,
+            "body": "Not found"
+        }
 
     
 HANDLER = ApiHandler()

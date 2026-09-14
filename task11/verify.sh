@@ -156,51 +156,65 @@ API_ID=$(aws apigateway get-rest-apis \
 
 echo "✅ API_ID=${API_ID}"
 
-# aws apigateway get-resources \
-#   --rest-api-id ${API_ID}
+
+echo
+echo "🔵 Invoke endpoint: initdb"
+
+HTTP_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+  https://${API_ID}.execute-api.${REGION}.amazonaws.com/api/initdb)
+
+STATUS_CODE=$(echo "$HTTP_RESPONSE" | tail -n1)
+RESPONSE=$(echo "$HTTP_RESPONSE" | sed '$d')
+
+if [ "$STATUS_CODE" -eq 200 ]; then
+    echo "✅ Success (status code $STATUS_CODE)"
+else
+    echo "❌ Failed to initialize database (status code $STATUS_CODE)"
+fi
+
+if [ "$RESPONSE" == "Database initialized" ]; then
+    echo "✅ Received response: $RESPONSE"
+else
+    echo "❌ Received response: $RESPONSE"
+fi
 
 
+echo
 
-# TODO
+AURORA_CLUSTER=$(aws lambda get-function-configuration \
+  --function-name $FUNCTION_API_HANDLER \
+  --query "Environment.Variables.DB_SECRET_NAME" \
+  --output text)
 
-# Get invoke URL
-# https://$API_ID.execute-api.eu-west-1.amazonaws.com/api
+echo AURORA_CLUSTER=$AURORA_CLUSTER
 
-# Init DB
-# curl -X POST \
-#   https://$API_ID.execute-api.eu-west-1.amazonaws.com/api/initdb
-# Expect 200
+SECRET=$(aws secretsmanager get-secret-value \
+  --secret-id $AURORA_CLUSTER \
+  --query SecretString \
+  --output text)
 
-# Create shipment
-# curl -X POST \
-#   https://$API_ID.execute-api.eu-west-1.amazonaws.com/api/shipments \
-#   -H "Content-Type: application/json" \
-#   -d '{
-#     "shipment_id":"s1",
-#     "order_id":"o1",
-#     "origin":"A",
-#     "destination":"B",
-#     "weight_kg":10
-#   }'
+USERNAME=$(echo "$SECRET" | jq -r '.username')
+PASSWORD=$(echo "$SECRET" | jq -r '.password')
 
-# Expect 201
+echo
+echo "USERNAME=$USERNAME"
+echo "PASSWORD=$PASSWORD"
 
-# Read shipment
-# curl \
-#   https://$API_ID.execute-api.eu-west-1.amazonaws.com/api/shipments/s1
+RDS_CLUSTER_ENDPOINT=$(aws rds describe-db-clusters \
+  --db-cluster-identifier $CLUSTER_NAME \
+  --query "DBClusters[0].Endpoint" \
+  --output text \
+  --region eu-west-1)
+
+echo
+echo "RDS_CLUSTER_ENDPOINT=$RDS_CLUSTER_ENDPOINT"
+
+# echo
+# PGPASSWORD=$PASSWORD psql \
+#   -h $RDS_CLUSTER_ENDPOINT \
+#   -U $USERNAME \
+#   -d logisticdb \
+#   -c "\dt"
 
 
-# Expect:
-# shipment_id = s1
-
-
-# ETL verification
-# Upload:
-# aws s3 cp shipments.csv \
-#   s3://cmtr-mxhmo8sx-data-transfer-storage/
-
-# Then verify:
-# aws logs tail \
-#   /aws/lambda/cmtr-mxhmo8sx-batch_processor \
-#   --follow
 
