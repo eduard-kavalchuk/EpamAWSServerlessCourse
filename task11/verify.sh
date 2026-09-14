@@ -156,6 +156,51 @@ API_ID=$(aws apigateway get-rest-apis \
 
 echo "✅ API_ID=${API_ID}"
 
-aws apigateway get-resources \
-  --rest-api-id ${API_ID}
+# aws apigateway get-resources \
+#   --rest-api-id ${API_ID}
+
+
+
+# TODO
+
+# Get invoke URL
+# https://$API_ID.execute-api.eu-west-1.amazonaws.com/api
+
+# Init DB
+# curl -X POST \
+#   https://$API_ID.execute-api.eu-west-1.amazonaws.com/api/initdb
+# Expect 200
+
+# Create shipment
+# curl -X POST \
+#   https://$API_ID.execute-api.eu-west-1.amazonaws.com/api/shipments \
+#   -H "Content-Type: application/json" \
+#   -d '{
+#     "shipment_id":"s1",
+#     "order_id":"o1",
+#     "origin":"A",
+#     "destination":"B",
+#     "weight_kg":10
+#   }'
+
+# Expect 201
+
+# Read shipment
+# curl \
+#   https://$API_ID.execute-api.eu-west-1.amazonaws.com/api/shipments/s1
+
+
+# Expect:
+# shipment_id = s1
+
+
+# ETL verification
+# Upload:
+# aws s3 cp shipments.csv \
+#   s3://cmtr-mxhmo8sx-data-transfer-storage/
+
+# Then verify:
+# aws logs tail \
+#   /aws/lambda/cmtr-mxhmo8sx-batch_processor \
+#   --follow
 

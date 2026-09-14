@@ -10,7 +10,11 @@
   "lambda_path": "lambdas/api_handler",
   "dependencies": [],
   "event_sources": [],
-  "env_variables": {},
+  "env_variables": {
+    "DB_HOST": "${logistic-cluster.endpoint}",
+    "DB_SECRET_NAME": "${logistic-cluster.master_user_secret_name}",
+    "DB_NAME": "logisticdb"
+  },
   "publish_version": true,
   "alias": "${lambdas_alias_name}",
   "url_config": {},
