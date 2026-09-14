@@ -302,22 +302,6 @@ echo "🔵 Verify carrier update..."
 curl "$BASE_URL/carriers/car001"
 
 echo
-echo "🔵 Create status update..."
-curl -X POST "$BASE_URL/statusupdates" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "shipment_id":"ship001",
-    "carrier_id":"car001",
-    "status":"CREATED",
-    "location":"Minsk",
-    "notes":"initial status"
-  }'
-
-echo
-echo "🔵 Read status updates..."
-curl "$BASE_URL/statusupdates/ship001"
-
-echo
 echo "🔵 Delete carrier..."
 curl -X DELETE "$BASE_URL/carriers/car001"
 
@@ -336,6 +320,22 @@ curl "$BASE_URL/shipments/does_not_exist"
 echo
 echo "🔵 Invalid carrier..."
 curl "$BASE_URL/carriers/does_not_exist"
+
+echo
+echo "🔵 Create status update..."
+curl -X POST "$BASE_URL/statusupdates" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "shipment_id":"ship001",
+    "carrier_id":"car001",
+    "status":"CREATED",
+    "location":"Minsk",
+    "notes":"initial status"
+  }'
+
+echo
+echo "🔵 Read status updates..."
+curl "$BASE_URL/statusupdates/ship001"
 
 echo
 echo "🔵 Invalid status..."
