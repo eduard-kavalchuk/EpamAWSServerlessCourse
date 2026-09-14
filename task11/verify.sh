@@ -1,4 +1,7 @@
 REGION="eu-west-1"
+student_access_sg_id="sg-093489b15feed739d"
+DB_NAME="logisticdb"
+
 
 echo
 echo "🔵 Checking if lambda function api_handler exists..."
@@ -209,12 +212,30 @@ RDS_CLUSTER_ENDPOINT=$(aws rds describe-db-clusters \
 echo
 echo "RDS_CLUSTER_ENDPOINT=$RDS_CLUSTER_ENDPOINT"
 
-# echo
-# PGPASSWORD=$PASSWORD psql \
-#   -h $RDS_CLUSTER_ENDPOINT \
-#   -U $USERNAME \
-#   -d logisticdb \
-#   -c "\dt"
+
+echo
+echo "🔵 Getting my IP..."
+IP=$(curl -s curl ifconfig.me)
+echo "My IP=$IP"
+
+aws ec2 authorize-security-group-ingress \
+  --group-id $student_access_sg_id \
+  --protocol tcp \
+  --port 5432 \
+  --cidr $IP/32 \
+  --region $REGION
+
+echo
+echo "🔵 Trying to connect to database..."
+nc -vz $RDS_CLUSTER_ENDPOINT 5432
+
+echo
+echo "🔵 List of tables:"
+PGPASSWORD=$PASSWORD psql \
+  -h $RDS_CLUSTER_ENDPOINT \
+  -U $USERNAME \
+  -d $DB_NAME \
+  -c "\dt"
 
 
 
