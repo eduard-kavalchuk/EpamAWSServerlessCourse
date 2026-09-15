@@ -104,11 +104,6 @@ def chunks(items, size):
 def process_shipments(content):
     rows = parse_csv(content)
 
-    print(
-        f"Processing shipments.csv "
-        f"({len(rows)} rows)"
-    )
-
     values = []
 
     for row in rows:
@@ -140,18 +135,9 @@ def process_shipments(content):
             chunk
         )
 
-    print(
-        f"Inserted {len(values)} shipment rows"
-    )
-
 
 def process_carriers(content):
     rows = parse_csv(content)
-
-    print(
-        f"Processing carriers.csv "
-        f"({len(rows)} rows)"
-    )
 
     values = []
 
@@ -179,18 +165,9 @@ def process_carriers(content):
             chunk
         )
 
-    print(
-        f"Inserted {len(values)} carrier rows"
-    )
-
 
 def process_status_updates(content):
     rows = parse_csv(content)
-
-    print(
-        f"Processing status_updates.csv "
-        f"({len(rows)} rows)"
-    )
 
     existing_shipments = {
         row[0]
@@ -243,22 +220,13 @@ def process_status_updates(content):
             chunk
         )
 
-    print(
-        f"Inserted {len(values)} status updates rows"
-    )
-
 
 class BatchProcessor(AbstractLambda):
 
     def validate_request(self, event):
-        print("validate_request invoked")
         return None
 
     def handle_request(self, event, context):
-        print("handle_request invoked")
-
-        # record = event["Records"][0]
-
         for record in event["Records"]:
 
             bucket = (
@@ -267,11 +235,6 @@ class BatchProcessor(AbstractLambda):
 
             key = (
                 record["s3"]["object"]["key"]
-            )
-
-            print(
-                f"bucket={bucket}, "
-                f"key={key}"
             )
 
             content = download_s3_object(
