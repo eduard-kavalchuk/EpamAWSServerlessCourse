@@ -8,7 +8,7 @@ def row_to_shipment(row):
         "origin": row[2],
         "destination": row[3],
         "weight_kg": float(row[4]),
-        "created_at": row[5].isoformat()
+        "created_at": row[5].strftime("%Y-%m-%dT%H:%M:%S.%fZ")
     }
 
 
@@ -36,5 +36,5 @@ def row_to_status_update(row):
         "status": row[3],
         "location": row[4],
         "notes": row[5],
-        "timestamp": row[6].isoformat()
+        "timestamp": row[6].strftime("%Y-%m-%dT%H:%M:%S.%fZ")
     }
