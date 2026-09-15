@@ -1,0 +1,4 @@
+shipment_id,carrier_id,status,location,notes,timestamp
+ship001,car001,CREATED,Minsk,Created,2026-09-14T12:00:00
+ship001,car001,IN_TRANSIT,Kaunas,Moving,2026-09-14T13:00:00
+ship002,car002,DELIVERED,Berlin,Delivered,2026-09-14T14:00:00

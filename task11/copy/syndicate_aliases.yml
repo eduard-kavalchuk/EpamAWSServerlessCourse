@@ -1,7 +1,7 @@
-account_id: '448049824597'
+account_id: '897729142587'
 lambdas_alias_name: learn
 logs_expiration: 30
 region: eu-west-1
-lambda_sn_id: subnet-0879703c76007fbea
-logistic_sg_id: sg-02a35b833441f8787
-student_access_sg_id: sg-093489b15feed739d
+lambda_sn_id: subnet-02986df7bb7e4ebd2
+logistic_sg_id: sg-062e7b8e0e8174c78
+student_access_sg_id: sg-0583d8ff9f131702c

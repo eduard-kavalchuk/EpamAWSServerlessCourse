@@ -1,5 +1,5 @@
 REGION="eu-west-1"
-student_access_sg_id="sg-0583d8ff9f131702c"
+student_access_sg_id="sg-056bc3574b613dd23"
 DB_NAME="logisticdb"
 
 
@@ -350,4 +350,98 @@ curl -X POST "$BASE_URL/statusupdates" \
   }'
 
 
+echo
+echo "🔵 Cleaning database..."
+PGPASSWORD=$PASSWORD psql \
+  -h "$RDS_CLUSTER_ENDPOINT" \
+  -U $USERNAME \
+  -d $DB_NAME \
+  -c "
+TRUNCATE TABLE
+    status_updates,
+    carriers,
+    shipments
+RESTART IDENTITY;
+"
 
+echo
+echo "🔵 Verify that database is clear..."
+PGPASSWORD=$PASSWORD psql \
+  -h "$RDS_CLUSTER_ENDPOINT" \
+  -U $USERNAME \
+  -d $DB_NAME \
+  -c "
+SELECT
+(SELECT COUNT(*) FROM shipments) AS shipments,
+(SELECT COUNT(*) FROM carriers) AS carriers,
+(SELECT COUNT(*) FROM status_updates) AS status_updates;
+"
+
+
+echo
+echo "🔵 Copying shipments.csv to S3..."
+aws s3 cp shipments.csv \
+s3://cmtr-mxhmo8sx-data-transfer-storage/
+
+# Make a pause to allow data to be processed and uploaded to database
+sleep 5
+
+echo
+echo "🔵 Copying carriers.csv to S3..."
+aws s3 cp carriers.csv \
+s3://cmtr-mxhmo8sx-data-transfer-storage/
+
+sleep 5
+
+echo
+echo "🔵 Copying status_updates.csv to S3..."
+aws s3 cp status_updates.csv \
+s3://cmtr-mxhmo8sx-data-transfer-storage/
+
+sleep 5
+
+echo
+echo "🔵 Making API verification after ETL..."
+
+echo
+echo "Fetching shipments data..."
+curl "$BASE_URL/shipments/ship001"
+
+echo
+echo "Fetching carriers data..."
+curl "$BASE_URL/carriers/car001"
+
+echo
+echo "Fetching status updates data..."
+curl "$BASE_URL/statusupdates/ship001"
+
+echo
+echo "🔵 Checking shipments DB..."
+PGPASSWORD=$PASSWORD psql \
+  -h "$RDS_CLUSTER_ENDPOINT" \
+  -U $USERNAME \
+  -d $DB_NAME \
+  -c "
+SELECT *
+FROM shipments;
+"
+
+echo "🔵 Checking carriers DB..."
+PGPASSWORD=$PASSWORD psql \
+  -h "$RDS_CLUSTER_ENDPOINT" \
+  -U $USERNAME \
+  -d $DB_NAME \
+  -c "
+SELECT *
+FROM carriers;
+"
+
+echo "🔵 Checking status_updates DB..."
+PGPASSWORD=$PASSWORD psql \
+  -h "$RDS_CLUSTER_ENDPOINT" \
+  -U $USERNAME \
+  -d $DB_NAME \
+  -c "
+SELECT *
+FROM status_updates;
+"
